@@ -35,10 +35,7 @@ function App () {
               <Route
                 exact
                 path="/home"
-                component={(props) => {
-                  console.info({ props })
-                  return (<div>home</div>)
-                }}
+                component={(props) => (<div>home</div>)}
               />
               <Route exact path="/blog" component={() => (<div>blog</div>)} />
               <Route exact path="/resume" component={() => (<div>resume</div>)} />

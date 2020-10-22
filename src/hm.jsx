@@ -1,15 +1,15 @@
 import React from 'react'
-import { connect } from 'react-redux'
+import { connect } from '@/package/dvax'
 import { Form, Input } from 'antd'
 import xx from './xx'
 import MyInput from './MyInput'
 
 const inputs = Array(100).join(',').split(',')
 
-const tr = null
 
 function Hm (props) {
   const { count } = props
+  // eslint-disable-next-line no-console
   console.info({ props, count, timeStamp: Date.now() })
   return (
     <div>
@@ -45,9 +45,10 @@ function Hm (props) {
 export default connect(
   ({ app, biz }) => ({
     count: app.count,
+    biz,
   }),
   (dispatch, ownProps) => ({
-    increase: () => dispatch({ type: 'increase' }),
-    setCount: (count) => dispatch({ type: 'setCount', count }),
+    increase: () => dispatch({ type: 'app.increase' }),
+    setCount: (count) => dispatch('app.setCount', count),
   })
 )(Hm)
