@@ -43,10 +43,10 @@ function Hm (props) {
 }
 
 export default connect(
-  (state) => ({
-    count: state.count,
+  ({ app, biz }) => ({
+    count: app.count,
   }),
-  (dispatch) => ({
+  (dispatch, ownProps) => ({
     increase: () => dispatch({ type: 'increase' }),
     setCount: (count) => dispatch({ type: 'setCount', count }),
   })

@@ -1,3 +1,6 @@
+import { createStore } from 'redux'
+import { connect } from 'react-redux'
+
 // easy-redux 设计
 const app = {
   state: {
@@ -22,6 +25,7 @@ const app = {
   },
 }
 
+
 // import app from './app'
 createStore({
   app,
@@ -32,28 +36,12 @@ function Component (props) {
   props.updateBookList({ pageSize: 12 })
 }
 
-connect(
-  ({ app }) => ({
-    pageSize: app.pageSize,
-    bookList: app.bookList,
-  }),
-  ({ app }) => ({
-    updateBookList: app.updateBookList,
-  })
-)(Component)
 
-pageState.createStore({
-  mod1: {
-    setName () {},
-  },
-  mod2: {
+const exports = {
+  createStore (mods) {
 
   },
-})
-
-pageState.connect()
-
-
-pageState.connect(mapStateToProps, mapDispatchToProps)(Component)
-
-props.dispatch('mod1.setName', 'xxxx')
+  connect (mapStateToProps, mapDispatchToProps) {
+    connect(mapStateToProps, mapDispatchToProps, 0)
+  },
+}
