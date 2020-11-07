@@ -1,6 +1,7 @@
 /* eslint-disable import/no-extraneous-dependencies */
 const webpack = require('webpack')
 const common = require('./common')
+const manifest = require('../dll/vendor-manifest.json')
 
 module.exports = common.initConfig({
   devServer: {
@@ -10,7 +11,7 @@ module.exports = common.initConfig({
     inline: true,
     // hotOnly: true,
     open: true,
-    setup (app) {
+    before (app) {
       app.get('/favicon.ico', (req, res) => {
         res.end()
         // res.json({ custom: 'response' });
@@ -56,8 +57,8 @@ module.exports = common.initConfig({
   },
   plugins: [
     new webpack.HotModuleReplacementPlugin(),
-    // new webpack.DllReferencePlugin({
-    //   manifest: require('../dll/vendor-manifest.json'),
-    // }),
+    new webpack.DllReferencePlugin({
+      manifest,
+    }),
   ],
 })

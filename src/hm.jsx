@@ -1,19 +1,19 @@
 import React from 'react'
-import { connect } from '@/package/dvax'
+import { connect } from '@/package/redux-hoop'
 import { Form, Input } from 'antd'
 import xx from './xx'
 import MyInput from './MyInput'
 
-const inputs = Array(100).join(',').split(',')
+const inputs = Array(4).join(',').split(',')
 
 
 function Hm (props) {
   const { count } = props
   // eslint-disable-next-line no-console
-  console.info({ props, count, timeStamp: Date.now() })
+  // console.info({ props, count, timeStamp: Date.now() })
   return (
     <div>
-      iioiiiii
+      2222aaaaaaaaaaasssssssssss
       传入数据：
       {xx}
       {inputs.map(() => (
@@ -29,7 +29,7 @@ function Hm (props) {
 
       <MyInput
         onStepChange={(nextValue) => {
-          props.setCount(nextValue)
+          props.setDoubleIncrease(nextValue)
         }}
         value={count}
         placeholder="优化后的input"
@@ -50,5 +50,6 @@ export default connect(
   (dispatch, ownProps) => ({
     increase: () => dispatch({ type: 'app.increase' }),
     setCount: (count) => dispatch('app.setCount', count),
+    setDoubleIncrease: (count) => dispatch('app.setDoubleIncrease', count),
   })
 )(Hm)

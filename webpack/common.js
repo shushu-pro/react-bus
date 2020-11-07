@@ -1,7 +1,7 @@
 /* eslint-disable import/no-extraneous-dependencies */
 const path = require('path')
 const HtmlWebpackPlugin = require('html-webpack-plugin')
-const webpack = require('webpack')
+// const webpack = require('webpack')
 
 
 const rootPath = process.cwd()
@@ -31,7 +31,7 @@ exports.initConfig = function initConfig (config) {
     },
 
     entry: {
-      app: './src/index',
+      app: './index',
     },
 
     output: {
@@ -109,7 +109,7 @@ exports.initConfig = function initConfig (config) {
           collapseWhitespace: true, // 压缩空格
           removeAttributeQuotes: true, // 去除属性 标签的 引号  例如 <p id="test" /> 输出 <p id=test/>
         },
-        mode: 'production',
+        mode,
       }),
       // new CleanWebpackPlugin(),
       ...plugins,

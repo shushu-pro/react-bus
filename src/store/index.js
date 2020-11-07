@@ -1,26 +1,7 @@
 
-import { createStore } from '@/package/dvax'
+import { withState } from '@/package/redux-hoop'
+import configs from './configs'
 
-
-// 业务模块化
-
-export default createStore({
-  app: {
-    state: {
-      count: 1,
-    },
-    reducer: {
-      increase ({ count }) {
-        return { count: count + 1 }
-      },
-      setCount (nil, nextCount) {
-        return { count: nextCount }
-      },
-    },
-  },
-  biz: {
-    state: {
-      count: 666,
-    },
-  },
+export default withState({
+  configs,
 })
