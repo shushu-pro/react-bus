@@ -18,6 +18,23 @@ module.exports = common.initConfig({
       })
     },
     historyApiFallback: true,
+    proxy: {
+      // port: 80,
+      '/openapi/': {
+        target: 'http://localhost:666/', // 开发环境
+        changeOrigin: true,
+        // pathRewrite: {
+        //   '^/panshi/openapi/': '/openapi/',
+        // },
+      },
+      '/mockapi/': {
+        target: 'http://localhost:666/', // 开发环境
+        changeOrigin: true,
+        // pathRewrite: {
+        //   '^/panshi/mockapi/': '/mockapi/',
+        // },
+      },
+    },
   },
   devtool: 'eval-source-map',
   module: {
@@ -46,7 +63,7 @@ module.exports = common.initConfig({
             loader: 'less-loader', // 编译 Less -> CSS
             options: {
               lessOptions: {
-                modifyVars: { '@primary-color': '#1DA57A' },
+                // modifyVars: { '@primary-color': '#1DA57A' },
                 javascriptEnabled: true,
               },
             },

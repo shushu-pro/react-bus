@@ -24,15 +24,23 @@ module.exports = {
   rules: {
     // 自定义规则
     'no-param-reassign': 'warn',
+    'import/no-extraneous-dependencies': [ 'off', {
+      devDependencies: false,
+      optionalDependencies: false,
+      peerDependencies: false,
+    } ],
+    'max-len': [ 'error', { code: 160 } ],
+    'import/no-unresolved': [ 'error', { ignore: [ '^@/' ] } ],
   },
   settings: {
     'import/resolver': {
       alias: {
         map: [
-          [ '@', './src' ],
+          [ '@', './src ' ],
         ],
-        extensions: [ '.ts', '.js', '.jsx', '.json' ],
+        extensions: [ '.js', '.jsx', '.json ' ],
       },
     },
   },
+
 }

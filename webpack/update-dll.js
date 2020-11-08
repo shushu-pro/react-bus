@@ -8,6 +8,7 @@ module.exports = {
     vendor: [ 'react', 'react-dom', 'react-router-dom', 'antd', 'redux', 'react-redux', 'lodash' ],
   },
   output: {
+    publicPath: '/',
     path: path.resolve('./dll'),
     filename: '[name].dll.js',
     library: '[name]_library',
@@ -42,5 +43,5 @@ module.exports = {
       },
     ],
   },
-  devtool: 'eval-source-map',
+  devtool: 'none', // 'eval-source-map',
 }

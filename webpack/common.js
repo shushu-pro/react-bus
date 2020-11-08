@@ -35,9 +35,9 @@ exports.initConfig = function initConfig (config) {
     },
 
     output: {
+      publicPath: '/',
       path: resolve('./dist'),
       filename: `js/[name].[${mode === 'production' ? 'contenthash' : 'hash'}].js`,
-      publicPath: '/',
     },
 
     module: {
@@ -50,13 +50,18 @@ exports.initConfig = function initConfig (config) {
           loader: 'babel-loader', // loader的名称（必须）
         },
 
+
         {
-          test: /\.(png|jpe?g|gif|svg)(\?.*)?$/,
+          test: /\.(png|jpe?g|gif)(\?.*)?$/,
           loader: 'url-loader',
           options: {
             limit: 10000, // url-loader 包含file-loader，这里不用file-loader, 小于10000B的图片base64的方式引入，大于10000B的图片以路径的方式导入
             name: 'static/img/[name].[hash:7].[ext]',
           },
+        },
+        {
+          test: /\.svg(\?.*)?$/,
+          use: [ '@svgr/webpack', 'url-loader' ],
         },
         {
           test: /\.(woff2?|eot|ttf|otf)(\?.*)?$/,
@@ -99,6 +104,7 @@ exports.initConfig = function initConfig (config) {
     plugins: [
 
       new HtmlWebpackPlugin({
+        publicPath: '/',
         filename: resolve('./dist/index.html'), // html模板的生成路径
         template: './src/index.ejs', // html模板
         inject: true, // true：默认值，script标签位于html文件的 body 底部

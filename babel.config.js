@@ -7,7 +7,6 @@ module.exports = {
     '@babel/preset-react',
   ],
   plugins: [
-
     [ 'import', { libraryName: 'antd', style: true } ],
     'lodash',
   ],
