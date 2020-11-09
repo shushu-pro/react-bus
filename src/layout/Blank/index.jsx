@@ -1,11 +1,13 @@
+import { Alert } from 'antd'
 import React from 'react'
 
 import './index.less'
 
-function BlankLaout () {
+function BlankLaout (props) {
   return (
     <div className="BlankLayout">
-      BlankLayout
+      <Alert message="BlankLayout" />
+      {props.children}
     </div>
   )
 }

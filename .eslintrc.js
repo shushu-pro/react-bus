@@ -23,13 +23,22 @@ module.exports = {
   },
   rules: {
     // 自定义规则
-    'no-param-reassign': 'warn',
+    // 自定义规则
+    'no-param-reassign': 'off',
     'import/no-extraneous-dependencies': [ 'off', {
       devDependencies: false,
       optionalDependencies: false,
       peerDependencies: false,
     } ],
-    'max-len': [ 'error', { code: 160 } ],
+    'no-multi-assign': 'off',
+    'no-restricted-syntax': [ 'error', 'BinaryExpression[operator="in"]' ],
+    camelcase: 'off',
+    'no-shadow': 'warn',
+    'react/jsx-curly-newline': 'off',
+    'react/no-unescaped-entities': [ 'error', { forbid: [ '<', '>', '{', '}' ] } ],
+    'react/jsx-one-expression-per-line': 'off',
+    'jsx-a11y/label-has-associated-control': 'off',
+    'no-use-before-define': [ 'error', { functions: false, classes: true, variables: true } ],
     'import/no-unresolved': [ 'error', { ignore: [ '^@/' ] } ],
   },
   settings: {

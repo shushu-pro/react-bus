@@ -11,6 +11,7 @@ module.exports = common.initConfig({
     inline: true,
     // hotOnly: true,
     open: true,
+    clientLogLevel: 'warn', // none, warn, error, info
     before (app) {
       app.get('/favicon.ico', (req, res) => {
         res.end()
