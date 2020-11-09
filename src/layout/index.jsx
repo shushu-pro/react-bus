@@ -1,7 +1,7 @@
 import React from 'react'
 import { BrowserRouter, Redirect, Route, Switch, Link, withRouter } from 'react-router-dom'
 import router from '@/router'
-
+import { Alert } from 'antd'
 import Home from '@/page/root/home'
 import Login from '@/page/root/login'
 import Project from '@/page/project'
@@ -11,16 +11,20 @@ import ProjectLayout from './Project'
 
 export default layout
 
-function layout () {
-  const routes = router.routes()
+const Router = withRouter(({ location, match }) => {
+  // 权限拦截
+  const { pathname } = location
+
+  // console.info({ location, match })
   return (
-    <BrowserRouter>
+    <>
+      {/* <Alert message={pathname} />
       <ul>
         <li> <Link to="/">home</Link></li>
         <li> <Link to="/login?a=12">login</Link></li>
         <li> <Link to="/project/1?a=12">project</Link></li>
         <li> <Link to="/project/1/api/2">apiDetail</Link></li>
-      </ul>
+      </ul> */}
       <Switch>
         <Route exact path="/">
           <Redirect to="/home" />
@@ -54,19 +58,18 @@ function layout () {
           </ProjectLayout>
         </Route>
 
-
       </Switch>
+    </>
+  )
+})
 
 
-      {/* {
-        routes.map((route, i) => (
-          <Route key={i}>
-            xxx:
-            {route.path}
-            {i}
-          </Route>
-        ))
-      } */}
+function layout () {
+  const routes = router.routes()
+
+  return (
+    <BrowserRouter>
+      <Router />
     </BrowserRouter>
   )
 }

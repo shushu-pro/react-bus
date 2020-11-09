@@ -6,7 +6,7 @@ import './index.less'
 function BlankLaout (props) {
   return (
     <div className="BlankLayout">
-      <Alert message="BlankLayout" />
+      {/* <Alert message="BlankLayout" /> */}
       {props.children}
     </div>
   )
