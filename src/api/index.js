@@ -17,7 +17,42 @@ const api = easyapi({
         method: 'post',
         url: 'project/create',
       },
+      apisInfo: {
+        url: 'api/list',
+        responseData: {
+          $strict: false,
+          data: 'list',
+        },
+      },
+      apisTree: {
+        url: 'project/apis',
+        responseData: {
+          id: [ true, 'key' ],
+          name: 'title',
+          categoryId: 'parentId',
+          $increase: {
+            $key: 'isLeaf',
+            $value: () => true,
+          },
+        },
+      },
+      detail: {
+        url: 'project/detail',
+      },
+      modify: {
+        method: 'post',
+        url: 'project/modify',
+      },
+      categorys: {
+        url: 'category/list',
+        responseData: {
+          id: [ true, 'key' ],
+          name: 'title',
+          parentId: true,
+        },
+      },
     },
+
 
     user: {
       favoriteProjects: {
@@ -31,6 +66,9 @@ const api = easyapi({
         method: 'post',
         url: 'user/favorite/project/remove',
       },
+      searchAPI: {
+        url: 'api/search',
+      },
     },
 
     login: {
@@ -41,15 +79,7 @@ const api = easyapi({
 
     //
 
-    // category
-    getProjectCategorys: {
-      url: 'category/list',
-      responseData: {
-        id: [ true, 'key' ],
-        name: 'title',
-        parentId: true,
-      },
-    },
+
     createCategory: {
       method: 'post',
       url: 'category/create',
@@ -68,33 +98,13 @@ const api = easyapi({
     },
 
     // project
-    getProject: {
-      url: 'project/detail',
-    },
-    eidtProject: {
-      method: 'post',
-      url: 'project/modify',
-    },
 
     // api
-    searchAPI: {
-      url: 'api/search',
-    },
+
     getProjectApis: {
-      url: 'project/apis',
-      responseData: {
-        id: [ true, 'key' ],
-        name: 'title',
-        categoryId: 'parentId',
-        $increase: {
-          $key: 'isLeaf',
-          $value: () => true,
-        },
-      },
+
     },
-    getApis: {
-      url: 'api/list',
-    },
+
     createApi: {
       method: 'post',
       url: 'api/create',

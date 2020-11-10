@@ -76,12 +76,12 @@ function SMForm ({
       {...createHookProps()}
     >
       {viewFields.map((field) => {
-        const { type, width, maxlength, disabled, options, initialValue, customRender, ...formItemProps } = field
+        const { type, width, maxlength, disabled, options, initialValue, customRender, placeholder, ...formItemProps } = field
         let content
         const itemDisabled = typeof disabled === 'function' ? disabled() : disabled
         switch (type) {
           case 'input':
-            content = (<Input defaultValue={initialValue} disabled={itemDisabled} maxLength={maxlength} />)
+            content = (<Input defaultValue={initialValue} disabled={itemDisabled} maxLength={maxlength} placeholder={placeholder} />)
             break
           case 'radio':
             content = (<Radio.Group defaultValue={initialValue} disabled={itemDisabled} options={options} />)
@@ -125,7 +125,7 @@ function SMForm ({
     }
 
     hook.validate = (callback) => {
-      console.info(JSON.stringify(form.getFieldsValue()))
+      // console.info(JSON.stringify(form.getFieldsValue()))
       // if (trim) {
       //   const trimValues = {}
       //   viewFields.forEach((field) => {
@@ -142,6 +142,9 @@ function SMForm ({
       //   })
       //   form.setFieldsValue(trimValues)
       // }
+      if (trim) {
+        // ...
+      }
 
       return form.validateFields()
     }

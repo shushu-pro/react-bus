@@ -7,7 +7,7 @@ import Login from '@/page/root/login'
 import Project from '@/page/project'
 import ApiDetail from '@/page/api-detail'
 import BlankLaout from './Blank'
-import ProjectLayout from './Project'
+import ProjectLayout from './Project/index'
 
 export default layout
 
@@ -43,19 +43,21 @@ const Router = withRouter(({ location, match }) => {
         </Route>
 
         <Route path="/project">
-          <ProjectLayout>
-            <Switch>
-              <Route exact path="/project/:projectId">
+          <Switch>
+            <Route exact path="/project/:projectId">
+              <ProjectLayout>
                 <Project />
-              </Route>
-              <Route exact path="/project/:projectId/api/:apiId">
+              </ProjectLayout>
+            </Route>
+            <Route exact path="/project/:projectId/api/:apiId">
+              <ProjectLayout>
                 <ApiDetail />
-              </Route>
-              <Route>
-                Page404
-              </Route>
-            </Switch>
-          </ProjectLayout>
+              </ProjectLayout>
+            </Route>
+            <Route>
+              Page404
+            </Route>
+          </Switch>
         </Route>
 
       </Switch>

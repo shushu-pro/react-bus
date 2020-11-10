@@ -1,4 +1,4 @@
-import ProjectLayout from '@/layout/Project'
+import ProjectLayout from '@/layout/Project/index'
 import project from '@/page/project'
 import apiDetail from '@/page/api-detail'
 

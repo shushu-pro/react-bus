@@ -22,14 +22,14 @@ module.exports = common.initConfig({
     proxy: {
       // port: 80,
       '/openapi/': {
-        target: 'http://localhost:666/', // 开发环境
+        target: 'http://localhost:444/', // 开发环境
         changeOrigin: true,
         // pathRewrite: {
         //   '^/panshi/openapi/': '/openapi/',
         // },
       },
       '/mockapi/': {
-        target: 'http://localhost:666/', // 开发环境
+        target: 'http://localhost:444/', // 开发环境
         changeOrigin: true,
         // pathRewrite: {
         //   '^/panshi/mockapi/': '/mockapi/',
