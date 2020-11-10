@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import { Modal } from 'antd'
 
 function SMDialog ({
@@ -14,10 +14,24 @@ function SMDialog ({
     onOpen,
     onClose,
     onSubmit,
+    afterClose,
   } = hook
 
   const [ visible, visibleSet ] = useState(false)
   const [ loading, loadingSet ] = useState(false)
+  const [ isUpdate, isUpdateSet ] = useState(false)
+
+  useEffect(() => {
+    isUpdateSet(true)
+  }, [])
+
+  useEffect(() => {
+    if (!visible && isUpdate) {
+      setTimeout(() => {
+        afterClose && afterClose()
+      }, 100)
+    }
+  }, [ visible ])
 
   bindExports()
 

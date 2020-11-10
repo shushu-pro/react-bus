@@ -16,6 +16,50 @@ function ProjectSidebar () {
   const [ projectInfo, projectInfoSet ] = useState({})
   const [ rawCategorys, rawCategorysSet ] = useState(null)
   const [ apisTree, apisTreeSet ] = useState(null)
+  const [ parentId, parentIdSet ] = useState()
+  const hookProjectAddCategoryForm = {
+    data: {
+      name: '',
+    },
+    gridLayout: {
+      labelCol: { span: 6 },
+      wrapperCol: { span: 17 },
+    },
+    fields: [
+      [ '分类名称', 'name', {
+        placeholder: '请输入分类名称',
+        maxlength: 10,
+        rules: [
+          { required: true, message: '请输入分类名称' },
+        ],
+      } ],
+    ],
+  }
+
+  const hookProjectAddCategoryDialog = {
+    title: '添加分类',
+    onOpen: (hook, parentId) => {
+      parentIdSet(parentId)
+    },
+    onSubmit: ({ setLoading }) => hookProjectAddCategoryForm
+      .validate()
+      .then((values) => api.category.create({
+        projectId,
+        parentId,
+        name: values.name,
+      })
+        .then(() => {
+          message.success('操作成功')
+          getProjectCategorys()
+        }))
+      .finally(() => {
+        setLoading(false)
+      }),
+    afterClose () {
+      hookProjectAddCategoryForm.resetFields()
+    },
+    render: () => (<SMForm hook={hookProjectAddCategoryForm} />),
+  }
 
   useEffect(() => {
     getProject()
@@ -94,47 +138,6 @@ function ProjectSidebar () {
       render: () => (<SMForm hook={hookProjectSettingForm} />),
     }
 
-    const hookProjectAddCategoryForm = {
-      data: {
-        name: '',
-      },
-      gridLayout: {
-        labelCol: { span: 6 },
-        wrapperCol: { span: 17 },
-      },
-      fields: [
-        [ '分类名称', 'name', {
-          placeholder: '请输入分类名称',
-          maxlength: 10,
-          rules: [
-            { required: true, message: '请输入分类名称' },
-          ],
-        } ],
-      ],
-    }
-
-    const hookProjectAddCategoryDialog = {
-      title: '添加分类',
-      onOpen: (hook, parentId) => {
-        hookProjectAddCategoryForm.data.parentId = parentId
-        hookProjectAddCategoryForm.resetFields()
-      },
-      onSubmit: ({ setLoading }) => hookProjectAddCategoryForm
-        .validate()
-        .then((values) => api.category.create({
-          projectId,
-          parentId: hookProjectAddCategoryForm.data.parentId,
-          name: values.name,
-        })
-          .then(() => {
-            message.success('操作成功')
-            getProject()
-          }))
-        .finally(() => {
-          setLoading(false)
-        }),
-      render: () => (<SMForm hook={hookProjectAddCategoryForm} />),
-    }
 
     return (
       <div className="topbar">
@@ -150,7 +153,7 @@ function ProjectSidebar () {
           <Button
             type="primary"
             style={{ float: 'right', marginRight: '8px' }}
-            onClick={() => hookProjectAddCategoryDialog.open(3)}
+            onClick={() => hookProjectAddCategoryDialog.open()}
           >
             添加分类
           </Button>
@@ -162,18 +165,70 @@ function ProjectSidebar () {
   }
 
   function renderAPITree () {
-    const { params: { projectId, apiId } } = useRouteMatch()
     const [ treeData, treeDataSet ] = useState([])
-    const [ expandedKeys, expandedKeysSet ] = useState(null)
 
-    // const { projectId, apiId } = route.params
-
-    // // 切换接口详情，自动定位展开树
-    // if (projectId && apiId) {
-    //   const { key } = this.projectApis.find(item => String(item.id) === apiId)
-    //   this.expandedKeys = [ key ]
-    // }
-
+    const [ hookCreateAPIFormData, hookCreateAPIFormDataSet ] = useState({
+      projectId,
+      name: '',
+      path: '',
+      method: 0,
+      // reqDataFormat: 0,
+      categoryId: null,
+    })
+    const hookCreateAPIForm = {
+      data: hookCreateAPIFormData,
+      gridLayout: {
+        labelCol: { span: 6 },
+        wrapperCol: { span: 17 },
+      },
+      fields: [
+        [ '接口名称', 'name', {
+          maxlength: 20,
+          rules: [
+            { required: true, message: '请输入接口名称' },
+          ],
+        } ],
+        [ '接口地址', 'path', {
+          maxlength: 64,
+          rules: [
+            { required: true, message: '请输入接口地址' },
+          ],
+        } ],
+        [ '请求方式', 'method', {
+          type: 'select',
+          options: [
+            { label: 'GET', value: 0 },
+            { label: 'POST', value: 1 },
+          ],
+          rules: [
+            { required: true, message: '请选择请求方式' },
+          ],
+        } ],
+      ],
+    }
+    const hookCreateAPIDialog = {
+      title: '创建API',
+      onOpen: (hook, categoryId) => {
+        hookCreateAPIFormDataSet((data) => ({
+          ...data,
+          categoryId,
+        }))
+      },
+      onSubmit: ({ setLoading }) => hookCreateAPIForm
+        .validate()
+        .then((values) => api.api.create({ ...hookCreateAPIForm.data, ...values, path: values.path.replace(/^\/+/, '') })
+          .then(() => {
+            message.success('操作成功')
+            getProjectApis()
+          }))
+        .finally(() => {
+          setLoading(false)
+        }),
+      afterClose () {
+        hookCreateAPIForm.resetFields()
+      },
+      render: () => <SMForm hook={hookCreateAPIForm} kl={hookCreateAPIFormData} />,
+    }
 
     useEffect(() => {
       if (!rawCategorys || !apisTree) {
@@ -187,15 +242,15 @@ function ProjectSidebar () {
 
 
     return (
-      <Tree.DirectoryTree
-        draggable
-        autoExpandParent
-        treeData={treeData}
-        // defaultExpandAll
-        // onSelect={onSelect}
-        // onExpand={onExpand}
-        //
-      />
+      <>
+        <Tree.DirectoryTree
+          draggable
+          autoExpandParent
+          treeData={treeData}
+          onDrop={onDrop}
+        />
+        <SMDialog hook={hookCreateAPIDialog} />
+      </>
     )
 
     function transfromCategorys () {
@@ -279,12 +334,10 @@ function ProjectSidebar () {
               {title}
               <span className="btns">
                 <Tooltip placement="top" title="添加接口">
-                  <span onClick={
-                    (e) => {
-                      // this.openCreateAPIDialog(id)
-                      e.stopPropagation()
-                    }
-                  }
+                  <span onClick={(e) => {
+                    hookCreateAPIDialog.open(id)
+                    e.stopPropagation()
+                  }}
                   ><PlusCircleOutlined />
                   </span>
                 </Tooltip>
@@ -294,12 +347,10 @@ function ProjectSidebar () {
                       placement="top"
                       title="添加子分类"
                     >
-                      <span onClick={
-                        (e) => {
-                          // this.openCreateCatDialog(id)
-                          e.stopPropagation()
-                        }
-                      }
+                      <span onClick={(e) => {
+                        hookProjectAddCategoryDialog.open(id)
+                        e.stopPropagation()
+                      }}
                       ><PlusOutlined />
                       </span>
                     </Tooltip>
@@ -340,7 +391,7 @@ function ProjectSidebar () {
           </div>
         )
       }
-      const treeData = adapter({
+      return adapter({
         key: String,
         isLeaf: true,
         title: titleFactory,
@@ -355,7 +406,26 @@ function ProjectSidebar () {
           },
         },
       }, categorys)
-      return treeData
+    }
+
+    function onDrop (info) {
+      console.info(info)
+      const dropKey = String(info.node.props.eventKey)
+      const dragKey = String(info.dragNode.props.eventKey)
+
+      // 分类类目不能移动到未分类
+      if (dropKey.indexOf('#') !== -1 && /^(\d+)$/.test(dragKey)) {
+        return
+      }
+
+      api.category
+        .move({
+          projectId, selfId: dragKey, targetId: dropKey,
+        })
+        .then(() => {
+          getProjectCategorys()
+          getProjectApis()
+        })
     }
   }
 

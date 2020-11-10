@@ -71,93 +71,85 @@ const api = easyapi({
       },
     },
 
+    category: {
+      move: {
+        method: 'post',
+        url: 'category/move',
+      },
+      create: {
+        method: 'post',
+        url: 'category/create',
+      },
+      modify: {
+        method: 'post',
+        url: 'category/modify',
+      },
+      delete: {
+        method: 'post',
+        url: 'category/delete',
+      },
+    },
+
     login: {
       method: 'post',
       url: 'login',
     },
 
 
-    //
-
-
-    createCategory: {
-      method: 'post',
-      url: 'category/create',
-    },
-    editCategory: {
-      method: 'post',
-      url: 'category/modify',
-    },
-    moveCategory: {
-      method: 'post',
-      url: 'category/move',
-    },
-    deleteCategory: {
-      method: 'post',
-      url: 'category/delete',
-    },
-
-    // project
-
-    // api
-
-    getProjectApis: {
-
-    },
-
-    createApi: {
-      method: 'post',
-      url: 'api/create',
-    },
-    editApi: {
-      method: 'post',
-      url: 'api/modify',
-    },
-    deleteApi: {
-      method: 'post',
-      url: 'api/delete',
-      errorIgnore: false,
-    },
-    getApiDetail: {
-      url: 'api/detail',
-      responseData: {
-        $strict: false,
-        method: [ true, {
-          $key: 'methodText',
-          $enum: [ 'GET', 'POST' ],
-        } ],
-        mockReqDoc: {
-          key: [ true, 'name' ],
-          types: [ {
-            $value: (value) => value.filter((item) => item !== 'null'),
+    api: {
+      create: {
+        method: 'post',
+        url: 'api/create',
+      },
+      modify: {
+        method: 'post',
+        url: 'api/modify',
+      },
+      delete: {
+        method: 'post',
+        url: 'api/delete',
+        errorIgnore: false,
+      },
+      detail: {
+        url: 'api/detail',
+        responseData: {
+          $strict: false,
+          method: [ true, {
+            $key: 'methodText',
+            $enum: [ 'GET', 'POST' ],
+          } ],
+          mockReqDoc: {
+            key: [ true, 'name' ],
+            types: [ {
+              $value: (value) => value.filter((item) => item !== 'null'),
+            },
+            {
+              $key: 'required',
+              $value: (value) => (value.includes('null') ? '否' : '是'),
+            },
+            ],
+            $increase: {
+              $key: 'defaultValue',
+              $value: () => '-',
+            },
+            description: true,
           },
-          {
-            $key: 'required',
-            $value: (value) => (value.includes('null') ? '否' : '是'),
-          },
-          ],
-          $increase: {
-            $key: 'defaultValue',
-            $value: () => '-',
-          },
-          description: true,
+          mockResDoc: true,
         },
-        mockResDoc: true,
-      },
-      mock2 (data) {
-        return {
-          code: 0,
-          data: {
-            apiId: data.apiId,
-            name: '接口名称',
-            path: 'jjhjhj',
-            method: 0,
-            methodText: 'GET',
-          },
-        }
+        mock2 (data) {
+          return {
+            code: 0,
+            data: {
+              apiId: data.apiId,
+              name: '接口名称',
+              path: 'jjhjhj',
+              method: 0,
+              methodText: 'GET',
+            },
+          }
+        },
       },
     },
-
   },
   errorIgnore: true,
   resolve: (responseObject) => responseObject.data.data,

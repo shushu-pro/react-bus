@@ -14,7 +14,7 @@ function SMForm ({
 
   const [ form ] = Form.useForm()
   const viewFields = []
-
+  const trimFields = {}
   fields.forEach((field) => {
     let label,
       name,
@@ -42,6 +42,10 @@ function SMForm ({
       type,
     }
 
+    if (type === 'input' && (trim && option.trim !== false || option.trim)) {
+      trimFields[name] = true
+    }
+
     if (data[name] !== undefined) {
       viewField.initialValue = data[name]
     }
@@ -61,10 +65,17 @@ function SMForm ({
   const labelCol = gridLayout.labelCol || { span: 6 }
   const wrapperCol = gridLayout.wrapperCol || { span: 16 }
 
-  // 以指令方式实现填充
-  setTimeout(() => {
+  useEffect(() => {
     form.setFieldsValue(data)
-  })
+  }, [ data ])
+
+  const onBlur = ({ target }) => {
+    const { id, value } = target
+
+    if (trimFields[id]) {
+      form.setFieldsValue({ [id]: value.trim() })
+    }
+  }
 
   bindExports()
 
@@ -74,29 +85,31 @@ function SMForm ({
       form={form}
       {...props}
       {...createHookProps()}
+      onBlur={onBlur}
     >
+
       {viewFields.map((field) => {
-        const { type, width, maxlength, disabled, options, initialValue, customRender, placeholder, ...formItemProps } = field
+        const { type, width, maxlength, disabled, options, customRender, placeholder, trim, ...formItemProps } = field
         let content
         const itemDisabled = typeof disabled === 'function' ? disabled() : disabled
         switch (type) {
           case 'input':
-            content = (<Input defaultValue={initialValue} disabled={itemDisabled} maxLength={maxlength} placeholder={placeholder} />)
+            content = (<Input disabled={itemDisabled} maxLength={maxlength} placeholder={placeholder} />)
             break
           case 'radio':
-            content = (<Radio.Group defaultValue={initialValue} disabled={itemDisabled} options={options} />)
+            content = (<Radio.Group disabled={itemDisabled} options={options} />)
             break
           case 'checkbox':
-            content = (<Checkbox.Group defaultValue={initialValue} disabled={itemDisabled} options={options} />)
+            content = (<Checkbox.Group disabled={itemDisabled} options={options} />)
             break
           case 'select':
-            content = (<Select defaultValue={initialValue} disabled={itemDisabled} options={options} />)
+            content = (<Select disabled={itemDisabled} options={options} />)
             break
           case 'custom':
-            content = customRender(initialValue, field)
+            content = customRender(field.initialValue, field)
             break
           case 'text':
-            content = <div>{initialValue}</div>
+            content = <div>{field.initialValue}</div>
             break
           default:
             content = null
@@ -109,10 +122,10 @@ function SMForm ({
             {...formItemProps}
             labelCol={labelCol}
             wrapperCol={wrapperCol}
+            style={{ width: width ? `${width}px` : 'auto' }}
+
           >
-            <div style={{ width: width ? `${width}px` : 'auto' }}>
-              {content}
-            </div>
+            {content}
           </Form.Item>
         )
       })}
