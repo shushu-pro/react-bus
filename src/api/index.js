@@ -75,15 +75,15 @@ const api = easyapi({
         method: 'post',
         url: 'category/move',
       },
-      create2: {
+      create: {
         method: 'post',
         url: 'category/create',
       },
-      modify2: {
+      modify: {
         method: 'post',
         url: 'category/modify',
       },
-      delete2: {
+      delete: {
         method: 'post',
         url: 'category/delete',
       },
@@ -95,20 +95,20 @@ const api = easyapi({
     },
 
     api: {
-      create3: {
+      create: {
         method: 'post',
         url: 'api/create',
       },
-      modify3: {
+      modify: {
         method: 'post',
         url: 'api/modify',
       },
-      delete3: {
+      delete: {
         method: 'post',
         url: 'api/delete',
         errorIgnore: false,
       },
-      detail3: {
+      detail: {
         url: 'api/detail',
         responseData: {
           $strict: false,

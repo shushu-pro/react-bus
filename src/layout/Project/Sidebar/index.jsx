@@ -42,7 +42,7 @@ function ProjectSidebar () {
     },
     onSubmit: ({ setLoading }) => hookProjectAddCategoryForm
       .validate()
-      .then((values) => api.category.create2({
+      .then((values) => api.category.create({
         projectId,
         parentId,
         name: values.name,
@@ -215,7 +215,7 @@ function ProjectSidebar () {
       },
       onSubmit: ({ setLoading }) => hookCreateAPIForm
         .validate()
-        .then((values) => api.api.create2({ ...hookCreateAPIForm.data, ...values, path: values.path.replace(/^\/+/, '') })
+        .then((values) => api.api.create({ ...hookCreateAPIForm.data, ...values, path: values.path.replace(/^\/+/, '') })
           .then(() => {
             message.success('操作成功')
             getProjectApis()
@@ -254,7 +254,7 @@ function ProjectSidebar () {
         hookModifyCategoryForm.resetFields()
       },
       onSubmit: ({ setLoading }) => hookModifyCategoryForm.validate()
-        .then((values) => api.category.modify2({ ...values, id: hookModifyCategoryFormData.id }))
+        .then((values) => api.category.modify({ ...values, id: hookModifyCategoryFormData.id }))
         .then(() => {
           message.success('操作成功')
           getProjectCategorys()

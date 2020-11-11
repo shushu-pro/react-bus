@@ -38,7 +38,7 @@ function apiDetail () {
   function getAPIDetail () {
     loadingSet(true)
     api.api
-      .detail3({ apiId }, { logger: true })
+      .detail({ apiId }, { logger: true })
       .then((data) => {
         apiDetailSet(data)
       })

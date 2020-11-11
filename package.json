@@ -14,7 +14,7 @@
     "@babel/runtime-corejs2": "^7.11.2",
     "@shushu.pro/adapter": "^0.0.4",
     "@shushu.pro/datax": "^0.0.1",
-    "@shushu.pro/easyapi": "^0.1.14",
+    "@shushu.pro/easyapi": "^0.1.15",
     "@shushu.pro/eslint-config-all": "0.0.1",
     "@svgr/webpack": "^5.4.0",
     "antd": "^4.6.6",
