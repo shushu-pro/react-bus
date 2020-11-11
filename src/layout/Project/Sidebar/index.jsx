@@ -1,12 +1,11 @@
 import React, { useEffect, useState } from 'react'
-import { Button, Layout, message, Tree, Tooltip } from 'antd'
+import { Button, Layout, message, Tree, Tooltip, Modal } from 'antd'
 import './index.less'
 import { useRouteMatch, Link } from 'react-router-dom'
 import { SMDialog, SMForm } from '@/package/shanmao'
 import { api } from '@/api'
 import adapter from '@shushu.pro/adapter'
 import { PlusCircleOutlined, PlusOutlined, EditOutlined, DeleteOutlined } from '@ant-design/icons'
-
 
 export default ProjectSidebar
 
@@ -43,7 +42,7 @@ function ProjectSidebar () {
     },
     onSubmit: ({ setLoading }) => hookProjectAddCategoryForm
       .validate()
-      .then((values) => api.category.create({
+      .then((values) => api.category.create2({
         projectId,
         parentId,
         name: values.name,
@@ -216,7 +215,7 @@ function ProjectSidebar () {
       },
       onSubmit: ({ setLoading }) => hookCreateAPIForm
         .validate()
-        .then((values) => api.api.create({ ...hookCreateAPIForm.data, ...values, path: values.path.replace(/^\/+/, '') })
+        .then((values) => api.api.create2({ ...hookCreateAPIForm.data, ...values, path: values.path.replace(/^\/+/, '') })
           .then(() => {
             message.success('操作成功')
             getProjectApis()
@@ -228,6 +227,42 @@ function ProjectSidebar () {
         hookCreateAPIForm.resetFields()
       },
       render: () => <SMForm hook={hookCreateAPIForm} kl={hookCreateAPIFormData} />,
+    }
+
+    const [ hookModifyCategoryFormData, hookModifyCategoryFormDataSet ] = useState({})
+    const hookModifyCategoryForm = {
+      data: hookModifyCategoryFormData,
+      gridLayout: {
+        labelCol: { span: 6 },
+        wrapperCol: { span: 17 },
+      },
+      fields: [
+        [ '分类名称', 'name', {
+          maxlength: 10,
+          rules: [
+            { required: true, message: '请输入分类名称' },
+          ],
+        } ],
+      ],
+    }
+    const hookModifyCategoryDialog = {
+      title: '分类设置',
+      onOpen: (hook, { name, id }) => {
+        hookModifyCategoryFormDataSet({ id, name })
+      },
+      afterClose: () => {
+        hookModifyCategoryForm.resetFields()
+      },
+      onSubmit: ({ setLoading }) => hookModifyCategoryForm.validate()
+        .then((values) => api.category.modify2({ ...values, id: hookModifyCategoryFormData.id }))
+        .then(() => {
+          message.success('操作成功')
+          getProjectCategorys()
+        })
+        .finally(() => {
+          setLoading(false)
+        }),
+      render: () => <SMForm hook={hookModifyCategoryForm} />,
     }
 
     useEffect(() => {
@@ -250,6 +285,7 @@ function ProjectSidebar () {
           onDrop={onDrop}
         />
         <SMDialog hook={hookCreateAPIDialog} />
+        <SMDialog hook={hookModifyCategoryDialog} />
       </>
     )
 
@@ -315,13 +351,20 @@ function ProjectSidebar () {
               {title}
               <span className="btns">
                 <Tooltip placement="top" title="删除接口">
-                  <span onClick={
-                    (e) => {
-                      // this.openDeleteAPIDialog(id)
-                      e.stopPropagation()
-                      e.preventDefault()
-                    }
-                  }
+                  <span onClick={(e) => {
+                    Modal.confirm({
+                      title: '确定删除该接口？',
+                      content: '注意：删除后不可恢复！',
+                      onOk: () => api.api
+                        .delete({ id })
+                        .then(() => {
+                          getProjectApis()
+                        }),
+                      onCancel () {},
+                    })
+                    e.stopPropagation()
+                    e.preventDefault()
+                  }}
                   ><DeleteOutlined />
                   </span>
                 </Tooltip>
@@ -358,24 +401,28 @@ function ProjectSidebar () {
                 }
                 {key !== '#' && (
                   <Tooltip placement="top" title="修改分类">
-                    <span onClick={
-                      (e) => {
-                        // this.openEditCatDialog({ id, name: title })
-                        e.stopPropagation()
-                      }
-                    }
+                    <span onClick={(e) => {
+                      hookModifyCategoryDialog.open({ id, name: title })
+                      e.stopPropagation()
+                    }}
                     ><EditOutlined />
                     </span>
                   </Tooltip>
                 )}
                 {key !== '#' && (
                   <Tooltip placement="top" title="删除分类">
-                    <span onClick={
-                      (e) => {
-                        // this.openDeleteCatDialog(id)
-                        e.stopPropagation()
-                      }
-                    }
+                    <span onClick={(e) => {
+                      Modal.confirm({
+                        title: '确定删除该分类？',
+                        content: '删除分类不会删除存在的接口',
+                        onOk: () => api.category
+                          .delete({ projectId, id })
+                          .then(() => {
+                            getProjectCategorys()
+                          }),
+                      })
+                      e.stopPropagation()
+                    }}
                     ><DeleteOutlined />
                     </span>
                   </Tooltip>
@@ -448,12 +495,3 @@ function ProjectSidebar () {
     })
   }
 }
-
-// :tree-data="treeData"
-// draggable
-// :expanded-keys="expandedKeys"
-// auto-expand-parent
-// @dragenter="onTreeItemDragEnter"
-// @drop="onTreeItemDrop"
-// @expand="onExpand"
-// />

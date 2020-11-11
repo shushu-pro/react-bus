@@ -2,7 +2,7 @@
 const path = require('path')
 const HtmlWebpackPlugin = require('html-webpack-plugin')
 // const webpack = require('webpack')
-
+const MonacoWebpackPlugin = require('monaco-editor-webpack-plugin')
 
 const rootPath = process.cwd()
 function resolve (dir) {
@@ -101,7 +101,6 @@ exports.initConfig = function initConfig (config) {
     },
 
     plugins: [
-
       new HtmlWebpackPlugin({
         publicPath: '/',
         filename: resolve('./dist/index.html'), // html模板的生成路径
@@ -115,6 +114,9 @@ exports.initConfig = function initConfig (config) {
           removeAttributeQuotes: true, // 去除属性 标签的 引号  例如 <p id="test" /> 输出 <p id=test/>
         },
         mode,
+      }),
+      new MonacoWebpackPlugin({
+        languages: [ 'json', 'javascript', 'html', 'xml' ],
       }),
       // new CleanWebpackPlugin(),
       ...plugins,

@@ -53,7 +53,6 @@ const api = easyapi({
       },
     },
 
-
     user: {
       favoriteProjects: {
         url: 'user/project/list',
@@ -76,15 +75,15 @@ const api = easyapi({
         method: 'post',
         url: 'category/move',
       },
-      create: {
+      create2: {
         method: 'post',
         url: 'category/create',
       },
-      modify: {
+      modify2: {
         method: 'post',
         url: 'category/modify',
       },
-      delete: {
+      delete2: {
         method: 'post',
         url: 'category/delete',
       },
@@ -95,22 +94,21 @@ const api = easyapi({
       url: 'login',
     },
 
-
     api: {
-      create: {
+      create3: {
         method: 'post',
         url: 'api/create',
       },
-      modify: {
+      modify3: {
         method: 'post',
         url: 'api/modify',
       },
-      delete: {
+      delete3: {
         method: 'post',
         url: 'api/delete',
         errorIgnore: false,
       },
-      detail: {
+      detail3: {
         url: 'api/detail',
         responseData: {
           $strict: false,

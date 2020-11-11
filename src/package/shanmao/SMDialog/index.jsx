@@ -62,6 +62,7 @@ function SMDialog ({
 
   function createHookProps () {
     const hookProps = {
+      ...hook.props,
       visible,
     }
 
