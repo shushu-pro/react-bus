@@ -7,6 +7,7 @@ export default JSONEditor
 function JSONEditor (props) {
   const { hook } = props
   const [ editorValue, editorValueSet ] = useState(hook.value)
+  const [ nextValue, nextValueSet ] = useState()
   const [ editorBox, editorBoxSet ] = useState(null)
   const [ editor, editorSet ] = useState(null)
 
@@ -47,11 +48,12 @@ function JSONEditor (props) {
   }, [ editorBox ])
 
   useEffect(() => {
-    if (!editor) {
-      return
-    }
-    editor.setValue(editorValue)
-  }, [ editorValue ])
+    setEditorValue(nextValue)
+  }, [ nextValue ])
+
+  useEffect(() => {
+    setEditorValue(hook)
+  }, [ hook.value ])
 
   return (
     <div className="JSONEditor">
@@ -66,9 +68,22 @@ function JSONEditor (props) {
 
   function createExports () {
     hook.setValue = (value) => {
-      editorValueSet(value)
+      nextValueSet({ value })
     }
 
     hook.getValue = () => editorValue
+  }
+
+  function setEditorValue (obj) {
+    if (!editor) {
+      return
+    }
+    editor.setValue(obj.value)
+    editorValueSet(obj.value)
+    if (format) {
+      setTimeout(() => {
+        editor.trigger('格式化json', 'editor.action.formatDocument')
+      })
+    }
   }
 }

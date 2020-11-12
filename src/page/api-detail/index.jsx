@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react'
 import { useRouteMatch } from 'react-router-dom'
 import { Spin } from 'antd'
 import { api } from '@/api'
+import tower from '@/package/tower'
 import BaseInfo from './component/BaseInfo'
 import RequestInfo from './component/RequestInfo'
 import ResponseInfo from './component/ResponseInfo'
@@ -29,9 +30,9 @@ function apiDetail () {
 
   return (
     <div className="page-apiDetail">
-      <BaseInfo projectId={projectId} apiDetail={apiDetail} />
-      <RequestInfo apiDetail={apiDetail} />
-      <ResponseInfo apiDetail={apiDetail} />
+      <BaseInfo projectId={projectId} apiDetail={apiDetail} updateAPI={updateAPI} />
+      <RequestInfo apiDetail={apiDetail} updateAPI={updateAPI} />
+      <ResponseInfo apiDetail={apiDetail} updateAPI={updateAPI} />
     </div>
   )
 
@@ -45,5 +46,12 @@ function apiDetail () {
       .finally(() => {
         loadingSet(false)
       })
+  }
+
+  function updateAPI (API_UPDATE) {
+    if (API_UPDATE) {
+      tower.send('API_UPDATE')
+    }
+    getAPIDetail()
   }
 }

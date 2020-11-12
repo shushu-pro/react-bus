@@ -9,7 +9,7 @@ import DataXEditor from '../DataXEditor'
 
 export default ResponseInfo
 
-function ResponseInfo ({ apiDetail }) {
+function ResponseInfo ({ apiDetail, updateAPI }) {
   const hookDataXEditor = {
     value: apiDetail.resData || '',
     onSave () {
@@ -25,6 +25,7 @@ function ResponseInfo ({ apiDetail }) {
       return api.api.modify({ id: apiDetail.id, resData: hookDataXEditor.getValue() })
         .then(() => {
           // 重新加载
+          updateAPI()
         })
         .finally(() => [
           setLoading(false),

@@ -76,7 +76,7 @@ function SMTable ({
     if (rowKey) {
       hookProps.rowKey = rowKey
     } else if (!props.rowKey) {
-      hookProps.rowKey = (record) => record.id || String(Math.random())
+      hookProps.rowKey = (record, i) => record.id || i
     }
 
     if (typeof dataSource === 'function') {

@@ -6,6 +6,7 @@ import { SMDialog, SMForm } from '@/package/shanmao'
 import { api } from '@/api'
 import adapter from '@shushu.pro/adapter'
 import { PlusCircleOutlined, PlusOutlined, EditOutlined, DeleteOutlined } from '@ant-design/icons'
+import tower from '@/package/tower'
 
 export default ProjectSidebar
 
@@ -65,8 +66,14 @@ function ProjectSidebar () {
     getProjectCategorys()
     getProjectApis()
 
+    const who = Symbol('this')
+    tower.listen('API_UPDATE', () => {
+      getProjectApis()
+    }, who)
+
     window.addEventListener('scroll', scroll)
     return () => {
+      tower.leave(who)
       window.removeEventListener('scroll', scroll)
     }
     function scroll () {
@@ -271,8 +278,6 @@ function ProjectSidebar () {
       }
 
       treeDataSet(transformTreeData(transfromCategorys()))
-
-      console.info('更新菜单')
     }, [ rawCategorys, apisTree ])
 
 
@@ -347,7 +352,7 @@ function ProjectSidebar () {
 
         if (titleType === 'api') {
           titleContent = (
-            <Link to={`/project/${projectId}/api/${id}`}>
+            <Link to={`/project/${projectId}/api/${id}`} style={{ display: 'block' }}>
               {title}
               <span className="btns">
                 <Tooltip placement="top" title="删除接口">
@@ -456,7 +461,6 @@ function ProjectSidebar () {
     }
 
     function onDrop (info) {
-      console.info(info)
       const dropKey = String(info.node.props.eventKey)
       const dragKey = String(info.dragNode.props.eventKey)
 

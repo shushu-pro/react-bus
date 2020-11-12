@@ -7,8 +7,8 @@ const OptimizeCssAssetsPlugin = require('optimize-css-assets-webpack-plugin')
 const TerserPlugin = require('terser-webpack-plugin')
 const { CleanWebpackPlugin } = require('clean-webpack-plugin')
 const LodashModuleReplacementPlugin = require('lodash-webpack-plugin')
+const cssnano = require('cssnano')
 const common = require('./common')
-
 
 const ASYS = process.env.ASYS === 1
 
@@ -23,7 +23,7 @@ module.exports = common.initConfig({
     }),
     new OptimizeCssAssetsPlugin({
       assetNameRegExp: /\.css$/g,
-      cssProcessor: require('cssnano'),
+      cssProcessor: cssnano,
       cssProcessorPluginOptions: {
         preset: [ 'default', { discardComments: { removeAll: true } } ],
       },
@@ -55,7 +55,7 @@ module.exports = common.initConfig({
             loader: 'less-loader',
             options: {
               lessOptions: {
-                modifyVars: { '@primary-color': '#1DA57A' },
+                // modifyVars: { '@primary-color': '#1DA57A' },
                 javascriptEnabled: true,
               },
             },

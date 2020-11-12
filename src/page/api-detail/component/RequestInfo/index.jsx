@@ -4,11 +4,12 @@ import { Card, Button } from 'antd'
 import './index.less'
 import { SMDialog, SMTable } from '@/package/shanmao'
 import { api } from '@/api'
+import adapter from '@shushu.pro/adapter'
 import DataXEditor from '../DataXEditor'
 
 export default RequestInfo
 
-function RequestInfo ({ apiDetail }) {
+function RequestInfo ({ apiDetail, updateAPI }) {
   const hookDataXEditor = {
     value: apiDetail.reqData || '',
     onSave () {
@@ -24,6 +25,7 @@ function RequestInfo ({ apiDetail }) {
       return api.api.modify({ id: apiDetail.id, reqData: hookDataXEditor.getValue() })
         .then(() => {
           // 重新加载
+          updateAPI()
         })
         .finally(() => [
           setLoading(false),
@@ -78,7 +80,8 @@ function RequestInfo ({ apiDetail }) {
           // width: 320,
         },
       ],
-      dataSource: apiDetail.mockReqDoc,
+      dataSource: transformData(apiDetail.mockReqDoc),
+      rowKey: 'key',
       rowClassName: (record, index) => {
         if (!record) {
           return ''
@@ -93,5 +96,20 @@ function RequestInfo ({ apiDetail }) {
     }
 
     return (<SMTable hook={hookRequestData} pagination={false} />)
+
+    function transformData (data, parentKey = '') {
+      const newData = adapter({
+        key: [ (key) => `${parentKey}-${key}`, 'name' ],
+        types: [
+          { $value: (value) => value.filter((item) => item !== 'null') },
+          { $key: 'required', $value: (value) => (value.includes('null') ? '否' : '是') },
+        ],
+        flag: true,
+        description: true,
+        children: (value, { row }) => transformData(value, `${parentKey}-${row.key}`),
+      }, data)
+
+      return newData
+    }
   }
 }

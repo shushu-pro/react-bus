@@ -10,7 +10,7 @@ export default BaseInfo
 
 const { message } = Modal
 
-function BaseInfo ({ projectId, apiDetail }) {
+function BaseInfo ({ projectId, apiDetail, updateAPI }) {
   const hookMockDialog = getHookMockDialog()
   const hookEditDialog = getHookEditDialog()
 
@@ -151,6 +151,7 @@ function BaseInfo ({ projectId, apiDetail }) {
           .then((values) => api.api.modify({ ...values, path: values.path.replace(/^\/+/, ''), id: apiDetail.id }))
           .then((data) => {
             // 更新成功
+            updateAPI(true)
           })
           .finally(() => {
             setLoading(false)

@@ -8,6 +8,7 @@ export default DataXEditor
 function DataXEditor (props) {
   const { hook } = props
   const [ editorValue, editorValueSet ] = useState(hook.value)
+  const [ nextValue, nextValueSet ] = useState()
   const [ editorBox, editorBoxSet ] = useState(null)
   const [ editor, editorSet ] = useState(null)
 
@@ -19,6 +20,8 @@ function DataXEditor (props) {
     if (!editorBox) {
       return
     }
+
+    // console.info('initEditor')
 
     const nextEditor = monaco.editor.create(editorBox, {
       value: editorValue,
@@ -51,8 +54,9 @@ function DataXEditor (props) {
     if (!editor) {
       return
     }
-    editor.setValue(editorValue)
-  }, [ editorValue ])
+    editor.setValue(nextValue.value)
+    editorValueSet(nextValue.value)
+  }, [ nextValue ])
 
   return (
     <div className="DataXEditor">
@@ -67,7 +71,7 @@ function DataXEditor (props) {
 
   function createExports () {
     hook.setValue = (value) => {
-      editorValueSet(value)
+      nextValueSet({ value })
     }
 
     hook.getValue = () => editorValue
