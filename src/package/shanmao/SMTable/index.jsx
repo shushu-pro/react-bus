@@ -35,7 +35,7 @@ function SMTable ({
       {...createHookProps()}
       loading={loading}
       dataSource={tableData.dataSource}
-      pagination={{
+      pagination={props.pagination === false ? false : {
         ...props.pagination,
         ...hook.pagination,
         current: params.page,

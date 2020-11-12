@@ -1,6 +1,6 @@
-import { mockapi } from '@/api'
+import { api, mockapi } from '@/api'
 import { SMDialog, SMForm } from '@/package/shanmao'
-import { Button, Card, Modal } from 'antd'
+import { Button, Card, Modal, Input, Descriptions } from 'antd'
 import React, { useState } from 'react'
 import JSONEditor from '../JSONEditor'
 
@@ -20,22 +20,17 @@ function BaseInfo ({ projectId, apiDetail }) {
       title="基础信息"
       extra={(
         <>
-          <Button
-            type="primary"
-            style={{ marginRight: '8px' }}
-            onClick={() => hookMockDialog.open()}
-          >MOCK接口
-          </Button>
-          <Button
-            type="primary"
-            style={{ marginRight: '8px' }}
-            onClick={() => hookEditDialog.open()}
-          >编辑
-          </Button>
+          <Button type="primary" style={{ marginRight: '8px' }} onClick={() => hookMockDialog.open()}>MOCK接口</Button>
+          <Button type="primary" style={{ marginRight: '8px' }} onClick={() => hookEditDialog.open()}>编辑</Button>
         </>
       )}
     >
-      xxx
+      <Descriptions>
+        <Descriptions.Item label="接口名称" span="3">{ apiDetail.name }</Descriptions.Item>
+        <Descriptions.Item label="接口地址" span="3">{ apiDetail.path }</Descriptions.Item>
+        <Descriptions.Item label="请求方式">{ apiDetail.methodText }</Descriptions.Item>
+        <Descriptions.Item label="接口描述">{ apiDetail.description || '-' }</Descriptions.Item>
+      </Descriptions>
       <SMDialog hook={hookMockDialog} />
       <SMDialog hook={hookEditDialog} />
     </Card>
@@ -99,11 +94,68 @@ function BaseInfo ({ projectId, apiDetail }) {
 
   function getHookEditDialog () {
     const hookEditForm = {
-
+      data: {
+        name: apiDetail.name,
+        path: apiDetail.path,
+        method: apiDetail.method,
+        description: apiDetail.description,
+      },
+      gridLayout: {
+        labelCol: { span: 6 },
+        wrapperCol: { span: 17 },
+      },
+      fields: [
+        [
+          '接口名称',
+          'name',
+          {
+            maxlength: 20,
+            rules: [ { required: true, message: '请输入接口名称' } ],
+          },
+        ],
+        [
+          '接口路径',
+          'path',
+          {
+            maxlength: 100,
+            rules: [ { required: true, message: '请输入接口路径' } ],
+          },
+        ],
+        [
+          '请求方式',
+          'method',
+          {
+            type: 'select',
+            options: [
+              { label: 'GET', value: 0 },
+              { label: 'POST', value: 1 },
+            ],
+            rules: [ { required: true, message: '请选择请求方式' } ],
+          },
+        ],
+        [
+          '接口描述', 'description', {
+            maxlength: 256,
+            customRender: () => (<Input.TextArea maxLength={256} />),
+          },
+        ],
+      ],
     }
+
     return {
       title: '修改基础信息',
       render: () => (<SMForm hook={hookEditForm} />),
+      onSubmit ({ setLoading }) {
+        return hookEditForm
+          .validate()
+          .then((values) => api.api.modify({ ...values, path: values.path.replace(/^\/+/, ''), id: apiDetail.id }))
+          .then((data) => {
+            // 更新成功
+          })
+          .finally(() => {
+            setLoading(false)
+          })
+      },
     }
   }
 }

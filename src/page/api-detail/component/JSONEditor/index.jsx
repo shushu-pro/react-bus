@@ -10,7 +10,7 @@ function JSONEditor (props) {
   const [ editorBox, editorBoxSet ] = useState(null)
   const [ editor, editorSet ] = useState(null)
 
-  const { height = 305, readOnly, format } = hook
+  const { height = 305, readOnly, format, onSave } = hook
 
   createExports()
 
@@ -19,7 +19,7 @@ function JSONEditor (props) {
       return
     }
 
-    const editor = monaco.editor.create(editorBox, {
+    const nextEditor = monaco.editor.create(editorBox, {
       value: editorValue,
       theme: 'vs-dark',
       language: 'json',
@@ -27,20 +27,20 @@ function JSONEditor (props) {
       readOnly,
       // lineNumbers: 'off',
     })
+
     // eslint-disable-next-line no-bitwise
-    editor.addCommand(monaco.KeyMod.CtrlCmd | monaco.KeyCode.KEY_S, () => onSave(editor.getValue()))
-    editor.onDidChangeModelContent((e) => {
-      editorValueSet(editor.getValue())
+    nextEditor.addCommand(monaco.KeyMod.CtrlCmd | monaco.KeyCode.KEY_S, () => onEditorSave(nextEditor.getValue()))
+    nextEditor.onDidChangeModelContent((e) => {
+      editorValueSet(nextEditor.getValue())
     })
     if (format) {
       setTimeout(() => {
-        console.info('初始化格式化')
-        editor.trigger('格式化json', 'editor.action.formatDocument')
+        nextEditor.trigger('格式化json', 'editor.action.formatDocument')
       })
     }
-    editorSet(editor)
-    console.info('initEditor')
 
+    // console.info('initEditor')
+    editorSet(nextEditor)
     return () => {
 
     }
@@ -59,8 +59,9 @@ function JSONEditor (props) {
     </div>
   )
 
-  function onSave (value) {
-    console.info('save', { value })
+  function onEditorSave (value) {
+    onSave && onSave(value)
+    // console.info('save', { value })
   }
 
   function createExports () {
