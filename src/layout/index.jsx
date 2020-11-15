@@ -5,9 +5,14 @@ import { Alert } from 'antd'
 import Home from '@/page/root/home'
 import Login from '@/page/root/login'
 import Project from '@/page/project'
-import ApiDetail from '@/page/api-detail'
+// import ApiDetail from '@/page/api-detail'
+import AppDetail from '@/page/appDetail'
 import BlankLaout from './Blank'
 import ProjectLayout from './Project/index'
+import UserCenter from '../page/user/center/index'
+import UserSettings from '../page/user/settings/index'
+import WithHeaderLayout from './WithHeader/index'
+
 
 export default layout
 
@@ -42,6 +47,35 @@ const Router = withRouter(({ location, match }) => {
           </BlankLaout>
         </Route>
 
+        <Route exact path="/app">
+          <WithHeaderLayout>
+            <AppDetail />
+          </WithHeaderLayout>
+        </Route>
+
+        <Route path="/user">
+          <Switch>
+            <Route exact path="/user/center">
+              <Redirect to="/user/center/apps" />
+            </Route>
+            <Route exact path="/user/center/:type">
+              <WithHeaderLayout>
+                <UserCenter />
+              </WithHeaderLayout>
+            </Route>
+            {/* <Route exact path="/user/center/projects">
+              <WithHeaderLayout>
+                <UserCenter />
+              </WithHeaderLayout>
+            </Route> */}
+            <Route exact path="/user/settings">
+              <WithHeaderLayout>
+                <UserSettings />
+              </WithHeaderLayout>
+            </Route>
+          </Switch>
+        </Route>
+
         <Route path="/project">
           <Switch>
             <Route exact path="/project/:projectId">
@@ -49,17 +83,16 @@ const Router = withRouter(({ location, match }) => {
                 <Project />
               </ProjectLayout>
             </Route>
-            <Route exact path="/project/:projectId/api/:apiId">
+            {/* <Route exact path="/project/:projectId/api/:apiId">
               <ProjectLayout>
                 <ApiDetail />
               </ProjectLayout>
-            </Route>
-            <Route>
-              Page404
-            </Route>
+            </Route> */}
           </Switch>
         </Route>
-
+        <Route>
+          Page404
+        </Route>
       </Switch>
     </>
   )

@@ -2,7 +2,7 @@
 const path = require('path')
 const HtmlWebpackPlugin = require('html-webpack-plugin')
 // const webpack = require('webpack')
-const MonacoWebpackPlugin = require('monaco-editor-webpack-plugin')
+// const MonacoWebpackPlugin = require('monaco-editor-webpack-plugin')
 
 const rootPath = process.cwd()
 function resolve (dir) {
@@ -37,6 +37,7 @@ exports.initConfig = function initConfig (config) {
       publicPath: '/',
       path: resolve('./dist'),
       filename: `js/[name].[${mode === 'production' ? 'contenthash' : 'hash'}].js`,
+
     },
 
     module: {
@@ -115,9 +116,9 @@ exports.initConfig = function initConfig (config) {
         },
         mode,
       }),
-      new MonacoWebpackPlugin({
-        languages: [ 'json', 'javascript', 'html', 'xml' ],
-      }),
+      // new MonacoWebpackPlugin({
+      //   languages: [ 'json', 'javascript', 'html', 'xml' ],
+      // }),
       // new CleanWebpackPlugin(),
       ...plugins,
     ],

@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react'
-import * as monaco from 'monaco-editor'
+// import * as monaco from 'monaco-editor'
 import './index.less'
 
 export default JSONEditor

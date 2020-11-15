@@ -9,10 +9,12 @@ function SMForm ({
     gridLayout = {},
     fields = [],
     data = {},
+    values,
     trim = true,
   } = hook
 
   const [ form ] = Form.useForm()
+  const initValues = values || data || {}
   const viewFields = []
   const trimFields = {}
   fields.forEach((field) => {
@@ -46,8 +48,8 @@ function SMForm ({
       trimFields[name] = true
     }
 
-    if (data[name] !== undefined) {
-      viewField.initialValue = data[name]
+    if (initValues[name] !== undefined) {
+      viewField.initialValue = initValues[name]
     }
 
     if (option.customRender) {
@@ -66,8 +68,8 @@ function SMForm ({
   const wrapperCol = gridLayout.wrapperCol || { span: 16 }
 
   useEffect(() => {
-    form.setFieldsValue(data)
-  }, [ data ])
+    form.setFieldsValue(initValues)
+  }, [ initValues ])
 
   const onBlur = ({ target }) => {
     const { id, value } = target
@@ -89,7 +91,7 @@ function SMForm ({
     >
 
       {viewFields.map((field) => {
-        const { type, width, maxlength, disabled, options, customRender, placeholder, trim, ...formItemProps } = field
+        const { type, width, maxlength, disabled, options, customRender, placeholder, mode, onSearch, props, trim, ...formItemProps } = field
         let content
         const itemDisabled = typeof disabled === 'function' ? disabled() : disabled
         switch (type) {
@@ -103,7 +105,7 @@ function SMForm ({
             content = (<Checkbox.Group disabled={itemDisabled} options={options} />)
             break
           case 'select':
-            content = (<Select disabled={itemDisabled} options={options} />)
+            content = (<Select disabled={itemDisabled} options={options} {...props} />)
             break
           case 'custom':
             content = customRender(field.initialValue, field)

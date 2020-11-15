@@ -9,6 +9,27 @@ const api = easyapi({
   baseURL: '/openapi/',
   configs: {
 
+    user: {
+      login: {
+        method: 'post',
+        url: 'user/login',
+      },
+      favoriteProjects: {
+        url: 'user/project/list',
+      },
+      addProjectFavorite: {
+        method: 'post',
+        url: 'user/favorite/project/add',
+      },
+      removeProjectFavorite: {
+        method: 'post',
+        url: 'user/favorite/project/remove',
+      },
+      searchAPI: {
+        url: 'api/search',
+      },
+    },
+
     project: {
       alls: {
         url: 'project/list',
@@ -53,22 +74,6 @@ const api = easyapi({
       },
     },
 
-    user: {
-      favoriteProjects: {
-        url: 'user/project/list',
-      },
-      addProjectFavorite: {
-        method: 'post',
-        url: 'user/favorite/project/add',
-      },
-      removeProjectFavorite: {
-        method: 'post',
-        url: 'user/favorite/project/remove',
-      },
-      searchAPI: {
-        url: 'api/search',
-      },
-    },
 
     category: {
       move: {
@@ -89,10 +94,6 @@ const api = easyapi({
       },
     },
 
-    login: {
-      method: 'post',
-      url: 'login',
-    },
 
     api: {
       create: {

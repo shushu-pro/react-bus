@@ -1,4 +1,4 @@
-import * as monaco from 'monaco-editor'
+// import * as monaco from 'monaco-editor'
 
 monaco.languages.register({ id: 'datax' })
 monaco.languages.setMonarchTokensProvider('datax', {

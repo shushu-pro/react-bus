@@ -3,9 +3,9 @@ import { Layout, Row, Col, Card, Button, message, List, Skeleton, Avatar } from 
 import LayoutHeader from '@/layout/Header'
 import { Link } from 'react-router-dom'
 
-import './index.less'
 import { SMDialog, SMForm } from '@/package/shanmao'
 import { api } from '@/api'
+import styles from './index.less'
 
 export default home
 
@@ -21,7 +21,7 @@ function home () {
   }, [])
 
   return (
-    <div className="page-home">
+    <div className={styles.home}>
       <LayoutHeader />
       <Layout>
         {renderProjectPanel()}
@@ -35,7 +35,7 @@ function home () {
 
   function renderProjectPanel () {
     return (
-      <div className="projectPanel">
+      <div className={styles.projectPanel}>
         <Row gutter={[ 20, 40 ]}>
           <Col span={12}>
             <Card

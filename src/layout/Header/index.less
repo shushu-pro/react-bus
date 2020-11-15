@@ -1,4 +1,6 @@
-.LayoutHeader {
+@pro-header-hover-bg: rgba(0, 0, 0, 0.025);
+
+.Header {
     background: #fff;
     box-shadow: 0 1px 4px rgba(0, 21, 41, 0.08);
     display: flex;
@@ -23,7 +25,7 @@
         img {
             width: 32px;
             height: 32px;
-            vertical-align: -6px;
+            vertical-align: -9px;
             margin-right: 8px;
         }
 
@@ -33,16 +35,51 @@
         }
     }
 
-    .navBar {
-        margin-top: 10px;
-        margin-left: 60px;
-    }
-
-    .searchBox {
+    .right {
+        display: flex;
+        float: right;
+        height: 64px;
         margin-left: auto;
+        overflow: hidden;
 
-        .ant-select {
-            width: 200px;
+        .action {
+            display: flex;
+            align-items: center;
+            height: 64px;
+            padding: 0 12px;
+            cursor: pointer;
+            transition: all 0.3s;
+
+            >span {
+                vertical-align: middle;
+            }
+
+            svg {
+                font-size: 18px;
+                color: #333;
+            }
+
+            &:hover {
+                background: @pro-header-hover-bg;
+            }
+
+            &:global(.opened) {
+                background: @pro-header-hover-bg;
+            }
         }
     }
+
+    // .navBar {
+    //     margin-left: auto !important;
+    //     margin-top: 10px;
+    //     margin-left: 60px;
+    // }
+
+    // .searchBox {
+    //     margin-left: 40px;
+
+    //     .ant-select {
+    //         width: 200px;
+    //     }
+    // }
 }

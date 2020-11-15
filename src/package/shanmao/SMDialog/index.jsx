@@ -1,10 +1,7 @@
 import React, { useState, useEffect } from 'react'
 import { Modal } from 'antd'
 
-function SMDialog ({
-  hook,
-  ...props
-}) {
+function SMDialog ({ hook, ...props }) {
   const {
     title,
     render = () => (<div />),

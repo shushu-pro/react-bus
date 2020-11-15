@@ -1,6 +1,6 @@
 import ProjectLayout from '@/layout/Project/index'
 import project from '@/page/project'
-import apiDetail from '@/page/api-detail'
+// import apiDetail from '@/page/api-detail'
 
 export default [
   {
@@ -15,7 +15,7 @@ export default [
       {
         title: '接口详情',
         path: 'api/:apiId',
-        component: apiDetail,
+        // component: apiDetail,
       },
     ],
   },

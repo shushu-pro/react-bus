@@ -49,7 +49,7 @@ function createStore (configs) {
 }
 
 function connect (mapStateToProps, mapDispatchToProps) {
-  return reduxConnect(mapStateToProps, (reduxDispatch, ownProps) => mapDispatchToProps(dispatch, ownProps))
+  return reduxConnect(mapStateToProps, mapDispatchToProps && ((reduxDispatch, ownProps) => mapDispatchToProps(dispatch, ownProps)))
 }
 
 async function dispatch (type, payload) {
