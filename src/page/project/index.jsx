@@ -4,8 +4,8 @@ import React, { useEffect, useState } from 'react'
 import { Link, useRouteMatch } from 'react-router-dom'
 import { SMTable } from '@/package/shanmao'
 import { Button, Card } from 'antd'
-import './index.less'
 import { api } from '@/api'
+import styles from './index.less'
 
 export default project
 
@@ -45,7 +45,7 @@ function project () {
       },
     }
     return (
-      <div className="apiList">
+      <div className={styles.appList}>
         <SMTable hook={hookAPIList} />
       </div>
     )

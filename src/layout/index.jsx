@@ -20,6 +20,62 @@ const Router = withRouter(({ location, match }) => {
   // 权限拦截
   const { pathname } = location
 
+
+  const config = [
+    {
+      path: '',
+      redirect: 'home',
+    },
+
+    {
+      path: 'home',
+      layout: BlankLaout,
+      page: Home,
+    },
+
+    {
+      path: 'login',
+      layout: BlankLaout,
+      page: Login,
+    },
+
+    {
+      path: 'app',
+      layout: WithHeaderLayout,
+      page: AppDetail,
+    },
+
+    {
+      path: 'user',
+      layout: WithHeaderLayout,
+      children: [
+        {
+          path: 'center',
+          redirect: 'user/center/apps',
+          children: [
+            {
+              path: ':type',
+              component: UserCenter,
+            },
+          ],
+        },
+        {
+          path: 'settings',
+          component: UserSettings,
+        },
+
+      ],
+    },
+
+    {
+      render: () => (
+        <div>page404</div>
+      ),
+    },
+
+
+  ]
+
   // console.info({ location, match })
   return (
     <>
@@ -29,6 +85,8 @@ const Router = withRouter(({ location, match }) => {
         <li> <Link to="/login?a=12">login</Link></li>
         <li> <Link to="/project/1?a=12">project</Link></li>
         <li> <Link to="/project/1/api/2">apiDetail</Link></li>
+
+
       </ul> */}
       <Switch>
         <Route exact path="/">

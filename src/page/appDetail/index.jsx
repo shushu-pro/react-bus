@@ -69,7 +69,7 @@ function AppDetail () {
     }
     return (
       <>
-        <h3 className={styles.title}>项目列表</h3>
+        <h3 className={styles.title}>项目列表<Button type="primary" className={styles.buttonAddProject}>添加项目</Button></h3>
         <SMTable hook={hookTable} />
       </>
     )

@@ -6,7 +6,7 @@ import tower from '@/package/tower'
 import BaseInfo from './component/BaseInfo'
 import RequestInfo from './component/RequestInfo'
 import ResponseInfo from './component/ResponseInfo'
-import './index.less'
+import styles from './index.less'
 
 export default apiDetail
 
@@ -29,7 +29,7 @@ function apiDetail () {
   }
 
   return (
-    <div className="page-apiDetail">
+    <div className={styles.content}>
       <BaseInfo projectId={projectId} apiDetail={apiDetail} updateAPI={updateAPI} />
       <RequestInfo apiDetail={apiDetail} updateAPI={updateAPI} />
       <ResponseInfo apiDetail={apiDetail} updateAPI={updateAPI} />

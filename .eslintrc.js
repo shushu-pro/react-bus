@@ -39,14 +39,14 @@ module.exports = {
     'react/jsx-one-expression-per-line': 'off',
     'jsx-a11y/label-has-associated-control': 'off',
     'no-use-before-define': [ 'error', { functions: false, classes: true, variables: true } ],
-    'import/no-unresolved': [ 'error', { ignore: [ '^@/' ] } ],
+    // 'import/no-unresolved': [ 'error', { ignore: [ '^@/' ] } ],
     'max-len': [ 'warn', { code: 160 } ],
   },
   settings: {
     'import/resolver': {
       alias: {
         map: [
-          [ '@', './src ' ],
+          [ '@', './src' ],
         ],
         extensions: [ '.js', '.jsx', '.json ' ],
       },
