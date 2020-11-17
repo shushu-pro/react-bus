@@ -32,6 +32,8 @@ module.exports = {
     } ],
     'no-multi-assign': 'off',
     'no-restricted-syntax': [ 'error', 'BinaryExpression[operator="in"]' ],
+    semi: [ 'error', 'always' ],
+    'semi-style': [ 'error', 'last' ],
     camelcase: 'off',
     'no-shadow': 'warn',
     'react/jsx-curly-newline': 'off',
@@ -39,7 +41,7 @@ module.exports = {
     'react/jsx-one-expression-per-line': 'off',
     'jsx-a11y/label-has-associated-control': 'off',
     'no-use-before-define': [ 'error', { functions: false, classes: true, variables: true } ],
-    // 'import/no-unresolved': [ 'error', { ignore: [ '^@/' ] } ],
+    'import/no-unresolved': [ 'warn', { ignore: [ '^@/' ] } ],
     'max-len': [ 'warn', { code: 160 } ],
   },
   settings: {
@@ -51,6 +53,6 @@ module.exports = {
         extensions: [ '.js', '.jsx', '.json ' ],
       },
     },
+    'import/ignore': [ /\.(scss|less|css)$/ ],
   },
-
-}
+};

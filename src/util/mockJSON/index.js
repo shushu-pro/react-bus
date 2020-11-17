@@ -1,7 +1,7 @@
-import DataX from '@shushu.pro/datax'
+import DataX from '@shushu.pro/datax';
 
-export default mockJSON
+export default mockJSON;
 
 function mockJSON (datax, params) {
-  return DataX.parse(datax, params)
+  return DataX.parse(datax, params);
 }

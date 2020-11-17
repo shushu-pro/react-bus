@@ -1,7 +1,7 @@
-import root from './root'
-import project from './project'
+import roots from './roots';
+import user from './user';
 
 export default [
-  ...root,
-  ...project,
-]
+  ...user,
+  ...roots,
+];
