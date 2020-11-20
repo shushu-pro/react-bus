@@ -82,4 +82,8 @@ const api = easyapi({
   },
 });
 
-export default api;
+export default { api };
+
+export {
+  api,
+};

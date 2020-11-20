@@ -1,40 +1,64 @@
-import React, { useState } from 'react';
-import { Input, Card, Form, Button } from 'antd';
-import api from '@/api';
-import mockValue from '@shushu.pro/mockv';
-import { connect } from '@/package/haima';
+import React, { useEffect, useState } from 'react';
+import { withRouter, useHistory } from 'react-router-dom';
+import { Form, Input, Button } from 'antd';
+import { api } from '@/api';
+import { UserOutlined, LockOutlined } from '@ant-design/icons';
+import styles from './index.less';
 
-const mapStateToProps = ({ user }) => ({
-  user,
-});
+export default withRouter(login);
 
-export default connect(mapStateToProps)(Login);
+function login (props) {
+  const formItemProps = {
+    labelCol: { span: 6 },
+    wrapperCol: { span: 18 },
+    colon: false,
+    labelAlign: 'right',
+    rules: [
+      {
+        required: true,
+        message: '请输入',
+      },
+    ],
+  };
 
-function Login (props) {
+  const [ form ] = Form.useForm();
+  const history = useHistory();
   const [ loading, loadingSet ] = useState(false);
+
+  useEffect(() => {
+    console.info('login.mouted');
+  }, []);
+
   return (
-    <div>
-      <Card>
-        上课考试了卡买买买看看
-        <Form>
-          <Form.Item label="用户名">
-            <Input value={props.user.name} />
+    <div className={styles.content}>
+      <div className={styles.main}>
+        <h2>登录@=666=@</h2>
+        <Form className={styles.loginBox} form={form}>
+          <Form.Item name="user" label="用户名" {...formItemProps}>
+            <Input prefix={<UserOutlined className="site-form-item-icon" />} />
           </Form.Item>
-          <Form.Item label="密码">
-            <Input />
+          <Form.Item name="password" label="密码" {...formItemProps}>
+            <Input.Password prefix={<LockOutlined className="site-form-item-icon" />} />
           </Form.Item>
-          <img src={props.user.avatar} alt="" />
-          <Button type="primary" loading={loading} onClick={doLogin}>登录</Button>
+          <div className={styles.buttonBox}>
+            <Button type="primary" onClick={submitLogin} loading={loading}>登录</Button>
+          </div>
         </Form>
-      </Card>
+      </div>
     </div>
   );
 
-  function doLogin () {
-    loadingSet(true);
-    api.user.login().finally(() => {
-      props.dispatch({ type: 'user.setInfo', payload: { name: mockValue.name() } });
-      loadingSet(false);
-    });
+  function submitLogin () {
+    form.validateFields()
+      .then(({ user, password }) => {
+        loadingSet(true);
+        api.user.login({ user, password })
+          .then(() => [
+            history.push('./home'),
+          ])
+          .finally(() => [
+            loadingSet(false),
+          ]);
+      });
   }
 }

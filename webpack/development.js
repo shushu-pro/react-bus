@@ -46,6 +46,7 @@ module.exports = base.extends({
     'react-dom': 'ReactDOM',
     antd: 'antd',
     'monaco-editor': 'monaco',
+    '@ant-design/icons': 'icons',
   },
   CDN: [
     'lodash@4.17.20/lodash.js',
@@ -53,6 +54,7 @@ module.exports = base.extends({
     'react-dom@17.0.1/react-dom.development.js',
     'antd@4.8.3/antd.js',
     'antd@4.8.3/antd.css',
+    'ant-design-icons@4.2.2/index.umd.js',
 
     'monaco-editor@0.21.2/min/vs/loader.js',
     'monaco-editor@0.21.2/config.js',

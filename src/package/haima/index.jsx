@@ -55,7 +55,7 @@ function connect (mapStateToProps, mapDispatchToProps) {
 }
 
 async function dispatch (type, payload) {
-  console.info('dispatch');
+  // console.info('dispatch');
   if (typeof type === 'object') {
     ({ type, payload } = type);
   }

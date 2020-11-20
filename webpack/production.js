@@ -56,8 +56,10 @@ module.exports = base.extends({
           ],
         },
       },
+
       {
         test: /\.css$/,
+        exclude: [ /node_modules/ ],
         use: [
           {
             loader: 'style-loader', // 创建 <style></style>
@@ -66,6 +68,21 @@ module.exports = base.extends({
             loader: 'css-loader', // 转换css
             options: {
               modules: true,
+            },
+          },
+        ],
+      },
+      {
+        test: /\.css$/,
+        include: [ /node_modules/ ],
+        use: [
+          {
+            loader: 'style-loader', // 创建 <style></style>
+          },
+          {
+            loader: 'css-loader', // 转换css
+            options: {
+              modules: false,
             },
           },
         ],

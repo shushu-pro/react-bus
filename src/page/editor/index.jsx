@@ -1,6 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import { Card } from 'antd';
 import JSONEditor from './JSONEditor';
+import DataXEditor from './DataXEditor';
+import MonacoEditor from './MonacoEditor';
 
 
 export default RequestInfo;
@@ -10,20 +12,21 @@ let timer = null;
 function RequestInfo ({ apiDetail, updateAPI }) {
   const hookDataXEditor = {
     value: 'ls;dls',
+    // language: 'javascript',
+    // readOnly: true,
     onSave () {
       // eslint-disable-next-line no-use-before-define
     //   hookEditDialog.submit();
     },
   };
 
-  const [ hasMonaco, hasMonacoSet ] = useState(false);
 
   useEffect(() => {
     timer = setInterval(() => {
       if (typeof monaco === 'object') {
         clearInterval(timer);
 
-        hasMonacoSet(true);
+        // hasMonacoSet(true);
       }
 
       // console.info(typeof monaco);
@@ -34,7 +37,7 @@ function RequestInfo ({ apiDetail, updateAPI }) {
     <Card>
       <div style={{ border: '10px solid #000', padding: '20px' }}>
         jsaljsaljsssdddd
-        {hasMonaco && <JSONEditor hook={hookDataXEditor} /> }
+        <DataXEditor hook={hookDataXEditor} />
       </div>
 
     </Card>

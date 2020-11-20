@@ -15,7 +15,9 @@ export default {
       context.dispatch('user.setInfo', payload);
     },
     async login (payload, context) {
-      context.dispatch('user.setInfo', payload);
+      api.user.login().then((data) => {
+        context.dispatch('user.setInfo', payload);
+      });
     },
     async logout () {
       console.info('logout');
