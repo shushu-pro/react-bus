@@ -6,7 +6,7 @@ export default function Layout ({ router }) {
   const { layout } = router.route;
   console.info(router);
   useEffect(() => {
-    console.info('Layout.init');
+    console.info('Layout.init', process.env.NODE_ENV);
   }, []);
 
   return (

@@ -3,7 +3,6 @@ import { Card, Button, message, Table } from 'antd';
 import { mockJSON } from '@/util';
 import { SMDialog, SMForm, SMTable } from '@/package/shanmao';
 
-
 export default Home;
 
 function Home () {

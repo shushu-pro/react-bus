@@ -1,6 +1,6 @@
 const path = require('path');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
-
+const webpack = require('webpack');
 
 const cwd = process.cwd();
 const resolve = (dir) => path.resolve(cwd, dir);
@@ -25,7 +25,7 @@ function extendsConfig (config) {
   return {
     mode,
     resolve: {
-      extensions: [ '.js', '.jsx', '.json' ], // 解析扩展。（当我们通过路导入文件，找不到改文件时，会尝试加入这些后缀继续寻找文件）
+      extensions: [ '.js', '.jsx', '.ts', '.tsx', '.json' ], // 解析扩展。（当我们通过路导入文件，找不到改文件时，会尝试加入这些后缀继续寻找文件）
       alias: {
         '@': resolve('src'), // 在项目中使用@符号代替src路径，导入文件路径更方便
       },
@@ -44,6 +44,10 @@ function extendsConfig (config) {
 
     module: {
       rules: [
+        { test: /\.tsx?$/, loader: 'awesome-typescript-loader' },
+
+        { enforce: 'pre', test: /\.js$/, loader: 'source-map-loader' },
+
         {
           test: /\.(png|jpe?g|gif)(\?.*)?$/,
           loader: 'url-loader',
@@ -114,6 +118,9 @@ function extendsConfig (config) {
             removeAttributeQuotes: true, // 去除属性 标签的 引号  例如 <p id="test" /> 输出 <p id=test/>
           },
         }),
+      }),
+      new webpack.DefinePlugin({
+        'process.env.NODE_ENV': JSON.stringify(process.env.NODE_ENV),
       }),
       ...plugins,
     ],

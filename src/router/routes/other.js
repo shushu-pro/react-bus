@@ -6,6 +6,12 @@ export default [
   },
 
   {
+    title: 'ts测试页面',
+    path: 'ts',
+    page: () => import('@/page/ppk-ts'),
+  },
+
+  {
     title: '首页',
     path: 'home',
     page: () => import('@/page/home'),

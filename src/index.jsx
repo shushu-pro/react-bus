@@ -2,6 +2,7 @@ import React from 'react';
 import ReactDom from 'react-dom';
 import { ConfigProvider } from 'antd';
 import zhCN from 'antd/lib/locale/zh_CN';
+import log from '@/package/log';
 import Router from '@/router';
 import withState from './store';
 
