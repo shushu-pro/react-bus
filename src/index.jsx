@@ -2,9 +2,10 @@ import React from 'react';
 import ReactDom from 'react-dom';
 import { ConfigProvider } from 'antd';
 import zhCN from 'antd/lib/locale/zh_CN';
-import log from '@/package/log';
+import { kvlog } from '@/package/log';
 import Router from '@/router';
 import withState from './store';
+import './index.less';
 
 // 由于 antd 组件的默认文案是英文，所以需要修改为中文
 const App = withState(() => (
@@ -16,3 +17,7 @@ const App = withState(() => (
 export default function render () {
   ReactDom.render(<App />, document.getElementById('app'));
 }
+
+
+kvlog('NODE_ENV', process.env.NODE_ENV);
+kvlog('BUILt', process.env.built);

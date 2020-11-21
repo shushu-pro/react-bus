@@ -44,9 +44,9 @@ function extendsConfig (config) {
 
     module: {
       rules: [
-        { test: /\.tsx?$/, loader: 'awesome-typescript-loader' },
+        // { test: /\.tsx?$/, loader: 'awesome-typescript-loader' },
 
-        { enforce: 'pre', test: /\.js$/, loader: 'source-map-loader' },
+        // { enforce: 'pre', test: /\.js$/, loader: 'source-map-loader' },
 
         {
           test: /\.(png|jpe?g|gif)(\?.*)?$/,
@@ -121,6 +121,7 @@ function extendsConfig (config) {
       }),
       new webpack.DefinePlugin({
         'process.env.NODE_ENV': JSON.stringify(process.env.NODE_ENV),
+        'process.env.built': JSON.stringify(String(new Date())),
       }),
       ...plugins,
     ],

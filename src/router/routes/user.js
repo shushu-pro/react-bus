@@ -18,7 +18,7 @@ export default [
               return '我的项目';
             },
             path: ':type',
-            page: () => import('@/page/user/center'),
+            lazy: () => import('@/page/user/center'),
           },
         ],
       },

@@ -1,3 +1,4 @@
+
 export default [
   {
     path: 'manage',
@@ -5,14 +6,15 @@ export default [
       {
         title: '用户管理',
         path: 'user',
-        page: () => import('@/page/manage/user'),
+        lazy: () => import('@/page/manage/user'),
       },
       {
         title: '权限管理',
         path: 'permisstion',
         keepAlive: [ '/manage/user' ],
-        page: () => import('@/page/manage/permisstion'),
+        lazy: () => import('@/page/manage/permisstion'),
       },
+
     ],
   },
 ];

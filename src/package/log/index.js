@@ -1,9 +1,11 @@
 
+export default {
+  kvlog,
+};
 
-kvlog('NODE_ENV', process.env.NODE_ENV);
-kvlog('GATEWAY', 'test');
-kvlog('VERSION', '1.2.3');
-
+export {
+  kvlog,
+};
 
 function logStyle (items) {
   const texts = [];
@@ -16,6 +18,7 @@ function logStyle (items) {
   // eslint-disable-next-line no-console
   console.log(texts.join(''), ...styles);
 }
+
 
 function kvlog (key, value) {
   logStyle([

@@ -1,5 +1,6 @@
 const path = require('path');
 // const MonacoWebpackPlugin = require('monaco-editor-webpack-plugin');
+// const HardSourceWebpackPlugin = require('hard-source-webpack-plugin');
 const base = require('./base');
 
 const cwd = process.cwd();
@@ -58,7 +59,7 @@ module.exports = base.extends({
 
     'monaco-editor@0.21.2/min/vs/loader.js',
     'monaco-editor@0.21.2/config.js',
-    // 'monaco-editor@0.21.2/min/vs/editor/editor.main.nls.js',
+    'monaco-editor@0.21.2/min/vs/editor/editor.main.nls.js',
     'monaco-editor@0.21.2/min/vs/editor/editor.main.js',
     // 'monaco-editor@0.21.2/min/vs/language/json/jsonMode.js',
     // 'monaco-editor@0.21.2/min/vs/basic-languages/javascript/javascript.js',
@@ -172,6 +173,7 @@ module.exports = base.extends({
   },
 
   plugins: [
+    // new HardSourceWebpackPlugin(),
     // new MonacoWebpackPlugin({
     //   languages: [ 'json', 'javascript', 'html', 'xml' ],
     // }),

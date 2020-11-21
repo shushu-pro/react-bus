@@ -1,3 +1,5 @@
+import home from '@/page/Home';
+
 export default [
 
   {
@@ -5,32 +7,37 @@ export default [
     redirect: '/home',
   },
 
-  {
-    title: 'ts测试页面',
-    path: 'ts',
-    page: () => import('@/page/ppk-ts'),
-  },
+  // {
+  //   title: 'ts测试页面',
+  //   path: 'ts',
+  //   page: () => import('@/page/ppk-ts'),
+  // },
 
   {
     title: '首页',
     path: 'home',
-    page: () => import('@/page/home'),
+    page: home, // () => import('@/page/home'),
     keepAlive: [ '/manage/user' ],
   },
 
   {
     path: 'editor',
-    page: () => import('@/page/editor'),
+    lazy: () => import('@/page/editor'),
   },
 
   {
     path: 'login',
-    page: () => import('@/page/login'),
+    lazy: () => import('@/page/login'),
     layout: null,
   },
 
   {
     path: 'app',
-    page: () => import('@/page/appDetail'),
+    lazy: () => import('@/page/appDetail'),
   },
+  {
+    path: 'page04',
+    lazy: () => import('@/page/404'),
+  },
+
 ];

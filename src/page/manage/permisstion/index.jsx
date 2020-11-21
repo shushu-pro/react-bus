@@ -12,7 +12,7 @@ function managePermission () {
         <Mod1 />
       </Card>
 
-      <hr />
+      <hr />jjjjiiiuuuuuuu
 
       <Card>
         <Mod2 />

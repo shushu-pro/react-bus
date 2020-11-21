@@ -70,9 +70,9 @@ function Home () {
       },
 
     ],
-    dataSource:
-     tableData({ page: 1, pageSize: 20 }),
-    // dataSource: getTableData,
+    // dataSource: tableData({ page: 1, pageSize: 20 }),
+    dataSource: getTableData,
+    pagination: { limit: 20 },
   };
 
   useEffect(() => {
@@ -81,6 +81,22 @@ function Home () {
   return (
     <div>
       <Card>
+        <br />axxxaaaaaaahhhh
+        <br />a
+        <br />s
+        <br />s
+        <br />s
+        <br />s
+        <br />s
+        <br />s
+        <br />s
+        <br />s
+        <br />s
+        <br />s
+        <br />s
+        <br />s
+        <br />s
+        <br />
         <Button onClick={() => hookTable.reload()}>重新加载</Button>
         <SMTable props hook={hookTable} />
         {/* <Table columns={hookTable.columns} dataSource={hookTable.dataSource} /> */}
@@ -90,9 +106,7 @@ function Home () {
   );
 }
 
-<tab key="k1" />;
-
-function getTableData ({ page, pageSize }) {
+function getTableData ({ page, pageSize = 20 }) {
   return new Promise((resolve) => {
     setTimeout(() => {
       resolve(mockJSON(`

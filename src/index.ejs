@@ -1,9 +1,10 @@
 <!DOCTYPE html>
 <html>
-  <head>
-    <meta charset="utf-8" />
-    <title>运营平台</title>
-    <% 
+
+<head>
+  <meta charset="utf-8" />
+  <title>运营平台</title>
+  <% 
     var CDN = htmlWebpackPlugin.options.ENV.CDN
     if (CDN) {
       for(var i = 0; i < CDN.length; i++){
@@ -15,13 +16,18 @@
           tag = '<script src="'+ path +'"></script>'
         }
     %>
-        <%= tag %>
-    <%
+  <%= tag %>
+  <%
       }
     }
     %>
-  </head>
-  <body>
+</head>
+
+<body>
+  <div id="scrollWrapper">
     <div id="app"></div>
-  </body>
+  </div>
+
+</body>
+
 </html>

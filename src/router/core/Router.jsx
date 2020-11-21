@@ -177,13 +177,12 @@ function Router (routes) {
         const layout = route.layout === null ? null : (route.layout || parentLayout);
 
         route.routeLayout = layout || {};
-
         if (route.children) {
           walkRoutes(route.children, pathsNext, layout);
         }
 
         // 非页面级别的路由配置项
-        if (typeof route.redirect === 'undefined' && !route.page && !route.render) {
+        if (typeof route.redirect === 'undefined' && !route.page && !route.render && !route.lazy) {
           return;
         }
 
@@ -204,8 +203,10 @@ function Router (routes) {
           route.keepAliveMatchs = (Array.isArray(keepAlive) ? keepAlive : [ keepAlive ]).map((item) => match(item));
         }
 
-        if (route.page) {
-          route.RoutePage = loadable(route.page);
+        if (route.lazy) {
+          route.RoutePage = loadable(route.lazy);
+        } else if (route.page) {
+          route.RoutePage = route.page;
         }
 
         route.routeRender = route.render || (() => <route.RoutePage />);
@@ -218,23 +219,18 @@ export default Router;
 
 // 懒加载
 function loadable (loader) {
-  const result = loader();
-
-  if (result instanceof Promise) {
-    return Loadable({
-      loader: () => new Promise((resolve) => {
-        setTimeout(() => {
-          loader().then(resolve);
-        }, 600);
-      }),
-      loading () {
-        return (
-          <div style={{ textAlign: 'center', paddingTop: '100px' }}>
-            <Spin size="large" />
-          </div>
-        );
-      },
-    });
-  }
-  return () => result;
+  return Loadable({
+    loader: () => new Promise((resolve) => {
+      setTimeout(() => {
+        loader().then(resolve);
+      }, 600);
+    }),
+    loading () {
+      return (
+        <div style={{ textAlign: 'center', paddingTop: '100px' }}>
+          <Spin size="large" />
+        </div>
+      );
+    },
+  });
 }
