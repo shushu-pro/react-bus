@@ -59,7 +59,27 @@ const api = easyapi({
         url: 'module/delete',
       },
       functionGroup: {
-        url: 'module/functionGroup',
+        list: {
+          url: 'module/functionGroup/list',
+        },
+        create: {
+          method: 'post',
+          url: 'module/functionGroup/create',
+        },
+        delete: {
+          method: 'post',
+          url: 'module/functionGroup/delete',
+        },
+
+      },
+      function: {
+        list: {
+          url: 'module/function/list',
+        },
+        create: {
+          method: 'post',
+          url: 'module/function/create',
+        },
       },
     },
 
