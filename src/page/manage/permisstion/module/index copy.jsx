@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Card, Button, message, Popconfirm, notification, Space } from 'antd';
+import { Card, Button, message, Popconfirm, notification } from 'antd';
 import { SMDialog, SMForm, SMTable } from '@/package/shanmao/';
 import { api } from '@/api/';
 import { textCopy } from '@/util';
@@ -31,27 +31,27 @@ function manageUser () {
         {
           title: '操作',
           render: (row) => (
-            <Space>
-              <Button onClick={() => hookUserModifyDialog.open(row)}>编辑</Button>
+            <>
+              <Button style={{ marginRight: '10px' }} onClick={() => hookUserModifyDialog.open(row)}>编辑</Button>
               <Popconfirm placement="top" title="确定删除" onConfirm={() => deleteUser(row.id)}>
-                <Button type="danger">删除</Button>
+                <Button type="danger" style={{ marginRight: '10px' }}>删除</Button>
               </Popconfirm>
               <Popconfirm placement="top" title="确定重置密码" onConfirm={() => resetPassword(row.id)}>
-                <Button type="danger">重置密码</Button>
+                <Button type="danger" style={{ marginRight: '10px' }}>重置密码</Button>
               </Popconfirm>
               {row.enabled ? (
                 <Button type="danger" onClick={() => setEnabled(row.id, false)}>禁用</Button>
               ) : (
-                <Button type="primary" onClick={() => setEnabled(row.id, true)}>启用</Button>
+                <Button type="primary" style={{ marginRight: '10px' }} onClick={() => setEnabled(row.id, true)}>启用</Button>
               )}
-            </Space>
+            </>
           ),
         },
       ],
       dataSource (params) {
         return api.user.alls(params);
       },
-      scroll: { x: 1100 },
+      scroll: { x: 1000 },
     };
 
     function deleteUser (id) {
@@ -163,7 +163,7 @@ function manageUser () {
     return (
       <>
         <div className={styles.buttonBox}>
-          <Button type="primary" onClick={() => hookUserAddDialog.open()}>创建用户</Button>
+          <Button type="primary" onClick={() => hookUserAddDialog.open()}>添加用户</Button>
         </div>
         <SMDialog hook={hookUserAddDialog} />
         <SMDialog hook={hookSuccessDialog} />

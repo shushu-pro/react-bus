@@ -31,7 +31,6 @@ function Router (routes) {
     route = staticRoutes[pathname];
     params = {};
 
-
     // 尝试从动态路由中进行匹配
     if (!route) {
       dynamicRoutes.some((item) => {
@@ -172,7 +171,7 @@ function Router (routes) {
       routes.forEach((route) => {
         const { path } = route;
         const pathsNext = paths.concat([ path ]);
-        const pathsNextText = pathsNext.join('/').replace(/\/+/g, '/');
+        const pathsNextText = pathsNext.join('/').replace(/\/+/g, '/').replace(/(.+)\/$/, '$1');
 
         const layout = route.layout === null ? null : (route.layout || parentLayout);
 

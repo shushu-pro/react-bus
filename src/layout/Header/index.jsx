@@ -44,8 +44,11 @@ function Header () {
   }
 
   function renderNavBar () {
-    const menuKey = useRoute().path;
-    console.info({ route: useRoute() });
+    const { path } = useRoute();
+    let menuKey = path;
+    if (/^\/manage\/permisstion/.test(path)) {
+      menuKey = '/manage/permisstion';
+    }
 
     useEffect(() => {
       console.info('renderNavBar.mouted');

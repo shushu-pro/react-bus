@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Modal } from 'antd';
+import { Modal, Spin } from 'antd';
 
 function SMDialog ({ hook, ...props }) {
   const {
@@ -13,14 +13,17 @@ function SMDialog ({ hook, ...props }) {
     onSubmit,
     afterClose,
   } = hook;
-
+  const [ contentLoading, contentLoadingSet ] = useState(false);
   const [ visible, visibleSet ] = useState(false);
   const [ loading, loadingSet ] = useState(false);
   const [ isUpdate, isUpdateSet ] = useState(false);
-
   useEffect(() => {
     isUpdateSet(true);
   }, []);
+
+  useEffect(() => {
+    contentLoadingSet(hook.loading);
+  }, [ hook.loading ]);
 
   useEffect(() => {
     if (!visible && isUpdate) {
@@ -34,10 +37,13 @@ function SMDialog ({ hook, ...props }) {
 
   return (
     <Modal
+      maskClosable={false}
       {...props}
       {...createHookProps()}
     >
-      {render(hook)}
+      <Spin spinning={contentLoading}>
+        {render(hook)}
+      </Spin>
     </Modal>
   );
 

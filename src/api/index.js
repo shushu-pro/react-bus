@@ -1,8 +1,10 @@
 import easyapi from '@shushu.pro/easyapi';
 import adapter from '@shushu.pro/adapter';
+import './adapter';
 import {
   message,
 } from 'antd';
+
 
 const api = easyapi({
   env: 'development',
@@ -12,6 +14,52 @@ const api = easyapi({
     user: {
       login: {
         url: 'login',
+      },
+      alls: {
+        url: 'user/alls',
+        responseData: {
+          $strict: false,
+          list: {
+            createTime: '#time',
+          },
+        },
+      },
+      create: {
+        method: 'post',
+        url: 'user/create',
+      },
+      delete: {
+        method: 'post',
+        url: 'user/delete',
+      },
+      modify: {
+        method: 'post',
+        url: 'user/modify',
+      },
+      resetPassword: {
+        method: 'post',
+        url: 'user/resetPassword',
+      },
+      enabled: {
+        method: 'post',
+        url: 'user/enabled',
+      },
+    },
+
+    module: {
+      list: {
+        url: 'module/list',
+      },
+      create: {
+        method: 'post',
+        url: 'module/create',
+      },
+      delete: {
+        method: 'post',
+        url: 'module/delete',
+      },
+      functionGroup: {
+        url: 'module/functionGroup',
       },
     },
 

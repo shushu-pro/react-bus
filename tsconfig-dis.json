@@ -1,20 +1,23 @@
 {
     "compilerOptions": {
-        "outDir": "./dist/",
+        "emitDecoratorMetadata": true,
+        "experimentalDecorators": true,
+        "allowSyntheticDefaultImports": true,
         "sourceMap": true,
         "esModuleInterop": true,
         "noImplicitAny": false,
-        "target": "es5",
-        "jsx": "react", // 在 .tsx文件里支持JSX
+        "jsx": "react",
         "baseUrl": ".",
         "paths": {
             "@/*": [
-                "./src/*"
+                "src/*"
             ]
         }
     },
-    "include": [
-        "./src/**/*"
+    "exclude": [
+        "node_modules",
+        "dist",
+        "dll"
     ]
 }
 // {
