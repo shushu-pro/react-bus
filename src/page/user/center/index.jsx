@@ -1,25 +1,22 @@
-import React, { useState } from 'react'
-import { Tabs, Button } from 'antd'
-import { AppleOutlined, AndroidOutlined } from '@ant-design/icons'
-import { useRouteMatch, useHistory } from 'react-router-dom'
-import Apps from './component/Apps'
-import Projects from './component/Projects'
-import styles from './index.less'
+import React, { useState } from 'react';
+import { Tabs, Button } from 'antd';
+import { AppleOutlined, AndroidOutlined } from '@ant-design/icons';
+import { useRouteMatch, useHistory } from 'react-router-dom';
+import { useRoute } from '@/router';
+import Apps from './component/Apps';
+import Projects from './component/Projects';
+import styles from './index.less';
 
 
-export default UserCenter
+export default UserCenter;
 
 function UserCenter () {
-  const match = useRouteMatch()
-  const history = useHistory()
-  const { params: { type: tabKey } } = match
+  const route = useRoute();
+  const history = useHistory();
+  const { params: { type: tabKey } } = route;
 
-  // console.info({ type })
-
-  // const [ tabKey, tabKeySet ] = useState(type)
-
-  const hookApps = {}
-  const hookProjects = {}
+  const hookApps = {};
+  const hookProjects = {};
 
   return (
     <div className={styles.content}>
@@ -32,29 +29,29 @@ function UserCenter () {
         </Tabs.TabPane>
       </Tabs>
     </div>
-  )
+  );
 
   function tabChange (tabKey) {
-    history.push(`./${tabKey}`)
+    history.push(`./${tabKey}`);
   }
 
   function RightButton () {
     const buttonText = ({
       apps: '添加应用',
       projects: '添加项目',
-    })[tabKey]
+    })[tabKey];
 
     return (
       <div style={{ marginRight: '10px' }}>
         <Button type="primary" onClick={openCreateDialog}>{buttonText}</Button>
       </div>
-    )
+    );
 
     function openCreateDialog () {
       ({
         apps: () => hookApps.openCreateDialog(),
         projects: () => hookProjects.openCreateDialog(),
-      })[tabKey]()
+      })[tabKey]();
     }
   }
 }

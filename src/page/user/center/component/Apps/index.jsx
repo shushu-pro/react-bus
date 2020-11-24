@@ -1,28 +1,26 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { List, Card } from 'antd';
 import { SMForm, SMDialog } from '@/package/shanmao';
 import { mockJSON } from '@/util/';
 import { useHistory } from 'react-router-dom';
+import { api } from '@/api';
 import cover1 from './img/cover/gLaIAoVWTtLbBWZNYEMg.png';
 import cover2 from './img/cover/iXjVmWVHbCJAyqvDxdtx.png';
 import cover3 from './img/cover/iZBVOIhGJiAnhplqjvZW.png';
 import cover4 from './img/cover/uMfMFlvUuceEyPpotzlq.png';
 import styles from './index.less';
 
+
 export default Apps;
 
 function Apps ({ hook }) {
-  const list = [
-  ];
+  const [ appList, appListSet ] = useState([]);
 
-  for (let i = 0; i < 20; i++) {
-    list.push({
-      id: i,
-      title: '一朵云运营平台',
-      cover: [ cover1, cover2, cover3, cover4 ][Math.floor(Math.random() * 4)],
-      description: '那是一种内在的东西， 他们到达不了，也无法触及的',
-    });
-  }
+  // 拉取应用列表
+  useEffect(() => {
+    fetchAppList();
+  }, []);
+
 
   const hookCreateDialog = useHookCreateDialog();
   const hookModifyDialog = useHookModifyDialog();
@@ -32,7 +30,7 @@ function Apps ({ hook }) {
 
   return (
     <div className={styles.content}>
-      {list.length > 0 ? (
+      {appList.length > 0 ? (
         <List
           rowKey="id"
           //  loading={loading}
@@ -45,7 +43,7 @@ function Apps ({ hook }) {
             xl: 4,
             xxl: 4,
           }}
-          dataSource={list}
+          dataSource={appList}
           renderItem={(item) => (
             <List.Item>
               <Card hoverable cover={<img alt={item.title} src={item.cover} />} onClick={() => history.push(`/app?id=${item.id}`)}>
@@ -69,9 +67,28 @@ function Apps ({ hook }) {
     </div>
   );
 
+  function fetchAppList () {
+    const list = [
+    ];
+
+    for (let i = 0; i < 20; i++) {
+      list.push({
+        id: i,
+        title: '一朵云运营平台',
+        cover: [ cover1, cover2, cover3, cover4 ][Math.floor(Math.random() * 4)],
+        description: '那是一种内在的东西， 他们到达不了，也无法触及的',
+      });
+    }
+
+    api.app.all().then((list) => {
+      appListSet(list);
+    });
+  }
+
   function bindExports () {
     hook.openCreateDialog = () => hookCreateDialog.open();
   }
+
 
   function useHookCreateDialog () {
     const hookCreateForm = {

@@ -44,6 +44,15 @@ const api = easyapi({
         method: 'post',
         url: 'user/enabled',
       },
+      role: {
+        list: {
+          url: 'user/role/list',
+        },
+        modify: {
+          method: 'post',
+          url: 'user/role/modify',
+        },
+      },
     },
 
     module: {
@@ -70,7 +79,10 @@ const api = easyapi({
           method: 'post',
           url: 'module/functionGroup/delete',
         },
-
+        modify: {
+          method: 'post',
+          url: 'module/functionGroup/modify',
+        },
       },
       function: {
         list: {
@@ -80,6 +92,47 @@ const api = easyapi({
           method: 'post',
           url: 'module/function/create',
         },
+        delete: {
+          method: 'post',
+          url: 'module/function/delete',
+        },
+        modify: {
+          method: 'post',
+          url: 'module/function/modify',
+        },
+      },
+    },
+
+    role: {
+      list: {
+        url: 'role/list',
+      },
+      create: {
+        method: 'post',
+        url: 'role/create',
+      },
+      delete: {
+        method: 'post',
+        url: 'role/delete',
+      },
+      modify: {
+        method: 'post',
+        url: 'role/modify',
+      },
+      permission: {
+        list: {
+          url: 'role/permission/list',
+        },
+        modify: {
+          method: 'post',
+          url: 'role/permission/modify',
+        },
+      },
+    },
+
+    app: {
+      all: {
+        url: 'app/all',
       },
     },
 

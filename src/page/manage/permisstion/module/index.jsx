@@ -8,7 +8,6 @@ import styles from './index.less';
 
 export default PermissionModule;
 
-
 function PermissionModule () {
   const hookModuleList = createHookModuleList();
   const hookPermissionSettingDialog = createHookPermissionSettingDialog();
@@ -131,6 +130,25 @@ function PermissionModule () {
         },
       ],
     };
+    const [ permissionEditorValues, permissionEditorValuesSet ] = useState({});
+    const hookPermissionEditorForm = {
+      values: permissionEditorValues,
+      fields: [
+        {
+          label: '权限名称',
+          name: 'label',
+          maxlength: 32,
+          rules: [ { required: true } ],
+        },
+        {
+          label: '权限标识',
+          name: 'symbol',
+          maxlength: 128,
+          rules: [ { required: true } ],
+        },
+      ],
+    };
+
     const [ activeTabKey, activeTabKeySet ] = useState('index');
     const [ loading, loadingSet ] = useState(false);
     const { moduleId } = moduleInfo;
@@ -178,11 +196,20 @@ function PermissionModule () {
                 <Tabs.TabPane tab="添加分类" key="groupEditor" disabled>
                   <div style={{ padding: '20px' }}>
                     <SMForm hook={hookGroupEditorForm} />
-                    <div style={{ textAlign: 'center' }}><Button onClick={submitGroup}>提交</Button></div>
+                    <Space style={{ marginLeft: '100px' }}>
+                      <Button onClick={submitGroup}>提交</Button>
+                      <Button onClick={() => activeTabKeySet('index')}>取消</Button>
+                    </Space>
                   </div>
                 </Tabs.TabPane>
                 <Tabs.TabPane tab="添加权限" key="permissionEditor" disabled>
-                  Content of Tab Pane 2
+                  <div style={{ padding: '20px' }}>
+                    <SMForm hook={hookPermissionEditorForm} />
+                    <Space style={{ marginLeft: '100px' }}>
+                      <Button onClick={submitPermission}>提交</Button>
+                      <Button onClick={() => activeTabKeySet('index')}>取消</Button>
+                    </Space>
+                  </div>
                 </Tabs.TabPane>
               </Tabs>
             </Col>
@@ -222,6 +249,22 @@ function PermissionModule () {
         });
     }
 
+    function submitPermission () {
+      hookPermissionEditorForm.validate()
+        .then(({ label, symbol }) => {
+          const { id, groupId } = permissionEditorValues;
+          // 编辑模式
+          if (id) {
+            return api.module.function.modify({ id, label, symbol });
+          }
+          return api.module.function.create({ moduleId, groupId, label, symbol });
+        })
+        .then(() => {
+          activeTabKeySet('index');
+          fetchModulePermission();
+        });
+    }
+
     // 转化权限树
     function transformPermissionTree (functionGroupData, functionData) {
       const groupMap = {
@@ -234,9 +277,9 @@ function PermissionModule () {
       };
       const rootChildren = groupMap[0].children;
 
+      // console.info({ rootChildren });
 
-      console.info({ rootChildren });
-
+      // 将平铺的分组转成树结构
       functionGroupData.forEach(({ id, label, symbol, parentId }) => {
         let groupItem = groupMap[id];
         if (!groupItem) {
@@ -254,24 +297,71 @@ function PermissionModule () {
           rootChildren.push(groupItem);
         }
       });
+
+      // 挂载权限因子
+      functionData.forEach(({ id, label, symbol, groupId }) => {
+        const groupItem = groupMap[groupId];
+        if (groupItem && groupItem.children) {
+          groupItem.children.push({
+            id, label, symbol, isLeaf: true, groupId, title,
+          });
+        }
+      });
+
       makeKey(groupMap[0].children, '0');
 
       return [ groupMap[0] ];
 
-      function title ({ id, label, key, parentId, groupId, isLeaf }) {
+      function title ({ id, label, key, symbol, parentId, groupId, isLeaf }) {
         return (
           <div className={styles.treeItem} key={key}>
             {label}
             <div className={styles.treeButtonBox}>
               {isLeaf
-                ? (<Space>xx</Space>)
+                ? (
+                  <Space>
+                    <Tooltip placement="top" title="修改权限">
+                      <span onClick={(e) => {
+                        activeTabKeySet('permissionEditor');
+                        permissionEditorValuesSet({
+                          id,
+                          label,
+                          symbol,
+                        });
+                        e.stopPropagation();
+                      }}
+                      ><EditOutlined />
+                      </span>
+                    </Tooltip>
+                    <Tooltip placement="top" title="删除权限">
+                      <span onClick={(e) => {
+                        Modal.confirm({
+                          title: '确定删除该权限？',
+                          content: '只允许删除未使用的权限',
+                          onOk: () => api.module.function
+                            .delete({ id })
+                            .then(() => {
+                              fetchModulePermission();
+                            }),
+                        });
+                        e.stopPropagation();
+                      }}
+                      ><DeleteOutlined />
+                      </span>
+                    </Tooltip>
+                  </Space>
+                )
                 : (
                   <Space>
                     {id && (
                       <Tooltip placement="top" title="添加权限">
                         <span onClick={(e) => {
                           activeTabKeySet('permissionEditor');
-
+                          permissionEditorValuesSet({
+                            groupId: id,
+                            label: '',
+                            symbol: '',
+                          });
                           e.stopPropagation();
                         }}
                         ><PlusCircleOutlined />
@@ -297,6 +387,11 @@ function PermissionModule () {
                         <Tooltip placement="top" title="修改分组">
                           <span onClick={(e) => {
                             activeTabKeySet('groupEditor');
+                            groupEditorValuesSet({
+                              id,
+                              label,
+                              symbol,
+                            });
                             e.stopPropagation();
                           }}
                           ><EditOutlined />

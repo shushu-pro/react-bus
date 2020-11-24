@@ -22,7 +22,7 @@ function SMDialog ({ hook, ...props }) {
   }, []);
 
   useEffect(() => {
-    contentLoadingSet(hook.loading);
+    contentLoadingSet(hook.loading || false);
   }, [ hook.loading ]);
 
   useEffect(() => {

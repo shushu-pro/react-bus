@@ -1,8 +1,9 @@
-import React, { useState } from 'react';
-import { Card, Button, message, Popconfirm, notification, Space } from 'antd';
+import React, { useState, useEffect } from 'react';
+import { Card, Button, message, Popconfirm, notification, Space, Select } from 'antd';
 import { SMDialog, SMForm, SMTable } from '@/package/shanmao/';
 import { api } from '@/api/';
 import { textCopy } from '@/util';
+import adapter from '@shushu.pro/adapter';
 import styles from './index.less';
 
 
@@ -11,6 +12,7 @@ export default manageUser;
 function manageUser () {
   const hookTable = createHookTable();
   const hookUserModifyDialog = createHookUserModifyDialog();
+  const hookUserRoleSettingDialog = createHookUserRoleSettingDialog();
 
 
   return (
@@ -18,6 +20,7 @@ function manageUser () {
       <UserAddDialog />
       <SMTable hook={hookTable} />
       <SMDialog hook={hookUserModifyDialog} />
+      <SMDialog hook={hookUserRoleSettingDialog} />
     </Card>
   );
 
@@ -33,6 +36,7 @@ function manageUser () {
           render: (row) => (
             <Space>
               <Button onClick={() => hookUserModifyDialog.open(row)}>编辑</Button>
+              <Button onClick={() => hookUserRoleSettingDialog.open(row.id)}>设置角色</Button>
               <Popconfirm placement="top" title="确定删除" onConfirm={() => deleteUser(row.id)}>
                 <Button type="danger">删除</Button>
               </Popconfirm>
@@ -109,6 +113,79 @@ function manageUser () {
           });
       },
     };
+  }
+
+  function createHookUserRoleSettingDialog () {
+    const [ loading, loadingSet ] = useState(false);
+    const [ userId, userIdSet ] = useState(null);
+    const [ dialogData, dialogDataSet ] = useState({});
+    const [ roleValues, roleValuesSet ] = useState([]);
+
+    useEffect(() => {
+      if (userId) {
+        fetchData();
+      }
+    }, [ userId ]);
+
+    return {
+      title: '设置角色',
+      loading,
+      render () {
+        return (
+          <Select
+            mode="multiple"
+            placeholder="选择角色"
+            options={dialogData.roleList}
+            value={roleValues}
+            onChange={pickRole}
+            style={{ width: '100%' }}
+          />
+        );
+      },
+      onOpen (hook, id) {
+        userIdSet(id);
+      },
+      afterClose () {
+        userIdSet(null);
+      },
+      onSubmit ({ setLoading }) {
+        return api.user.role.modify({ id: userId, roles: roleValues })
+          .then(() => {
+
+          })
+          .finally(() => {
+            setLoading(false);
+          });
+      },
+    };
+
+    function pickRole (values) {
+      roleValuesSet(values);
+      console.info({ values });
+    }
+
+    // 拉取用户角色和角色列表
+    function fetchData (params) {
+      loadingSet(true);
+      Promise.all([
+        api.user.role.list({ id: userId }),
+        api.role.list(),
+      ])
+        .then(([ userRoleList, { list: roleList } ]) => {
+          dialogDataSet({
+            userRoleList,
+            roleList: adapter({ id: 'value', label: true }, roleList),
+          });
+          roleValuesSet(userRoleList);
+          // console.info({
+          //   userRoleList,
+          //   roleList: adapter({ id: 'value', label: true }, roleList),
+          // });
+        })
+        .finally(() => {
+          loadingSet(false);
+        });
+    }
   }
 
   function UserAddDialog () {

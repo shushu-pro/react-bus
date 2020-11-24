@@ -10,7 +10,6 @@ export default [
             redirect: '/user/center/apps',
           },
           {
-            layout: null,
             title: (route) => {
               if (route.params.type === 'apps') {
                 return '我的应用';

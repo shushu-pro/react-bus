@@ -154,7 +154,7 @@ function Router (routes) {
   }
 
   function title () {
-    return typeof route.title === 'function' ? route.title(route) : route.title;
+    return typeof route.title === 'function' ? route.title(this.route) : route.title;
   }
 
   function useSwitch ({ notFound, notLogin, notAuth, default: defaultCall }) {

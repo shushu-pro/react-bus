@@ -13,14 +13,15 @@ export default [
         lazy: () => import('@/page/manage/user'),
       },
       {
-        title: '权限管理',
         path: 'permisstion',
         // keepAlive: [ '/manage/user' ],
         // lazy: () => import('@/page/manage/permisstion'),
         children: [
           {
+            title: '权限管理',
             path: '',
-            redirect: '/manage/permisstion/module',
+            lazy: () => import('@/page/manage/permisstion'),
+            // redirect: '/manage/permisstion/module',
           },
           {
             title: '模块管理',

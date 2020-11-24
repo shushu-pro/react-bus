@@ -1,22 +1,23 @@
 import React from 'react';
-import { Card } from 'antd';
-import Mod1 from './mod1';
-import Mod2 from './mod2';
+import { Card, Tabs } from 'antd';
+// import Mod1 from './mod1';
+// import Mod2 from './mod2';
+import Module from './module';
+import Role from './role';
 
 export default managePermission;
 
 function managePermission () {
   return (
     <>
-      <Card>
-        <Mod1 />
-      </Card>
-
-      <hr />jjjjiiiuuuuuuu
-
-      <Card>
-        <Mod2 />
-      </Card>
+      <Tabs style={{ margin: '20px' }}>
+        <Tabs.TabPane tab="角色管理" key="role">
+          <Role />
+        </Tabs.TabPane>
+        <Tabs.TabPane tab="模块管理" key="module">
+          <Module />
+        </Tabs.TabPane>
+      </Tabs>
     </>
   );
 }
