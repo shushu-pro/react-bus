@@ -6,7 +6,7 @@ import { useHistory } from 'react-router-dom';
 
 export default Info;
 
-function Info ({ projectId }) {
+function Info ({ appId }) {
   const [ detail, detailSet ] = useState({});
   const [ loading, loadingSet ] = useState(false);
   const hookModifyDialog = createHookModifyDialog();
@@ -43,7 +43,7 @@ function Info ({ projectId }) {
 
   function fetchDetail () {
     loadingSet(true);
-    api.app.detail({ id: projectId })
+    api.app.detail({ id: appId })
       .then((detail) => {
         detailSet(detail);
       })
@@ -57,7 +57,7 @@ function Info ({ projectId }) {
       title: '确定删除该应用？',
       content: '只允许删除空应用',
       onOk: () => api.app
-        .delete({ id: projectId })
+        .delete({ id: appId })
         .then(() => {
           history.push('/user/center/apps');
         }),
@@ -83,7 +83,7 @@ function Info ({ projectId }) {
       onSubmit ({ setLoading }) {
         return hookForm.validate()
           .then((values) => api.app.modify({
-            id: projectId,
+            id: appId,
             ...values,
           }))
           .then(() => {

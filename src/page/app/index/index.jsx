@@ -8,19 +8,19 @@ import Api from './Api';
 export default app;
 
 function app () {
-  const { query: { id: projectId } } = useRoute();
+  const { query: { id: appId } } = useRoute();
 
   return (
     <>
-      <Tabs style={{ margin: '20px' }}>
+      <Tabs style={{ margin: '20px' }} defaultActiveKey="member">
         <Tabs.TabPane tab="基础信息" key="info">
-          <Info projectId={projectId} />
+          <Info appId={appId} />
         </Tabs.TabPane>
         <Tabs.TabPane tab="用户管理" key="member">
-          <Member />
+          <Member appId={appId} />
         </Tabs.TabPane>
         <Tabs.TabPane tab="接口管理" key="api">
-          <Api />
+          <Api appId={appId} />
         </Tabs.TabPane>
       </Tabs>
     </>

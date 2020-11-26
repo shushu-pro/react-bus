@@ -20,6 +20,12 @@ export default {
     url: 'app/delete',
   },
 
+  user: {
+    list: {
+      url: 'app/user/list',
+    },
+  },
+
   member: {
     list: {
       url: 'app/member/list',
@@ -33,6 +39,11 @@ export default {
     remove: {
       method: 'post',
       url: 'app/member/remove',
+    },
+
+    modify: {
+      method: 'post',
+      url: 'app/member/modify',
     },
 
   },
