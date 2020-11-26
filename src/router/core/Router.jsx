@@ -45,18 +45,30 @@ function Router (routes) {
       });
     }
 
+    const query = {};
+
+    // 解析查询参数
+    if (location.search) {
+      location.search.substr(1).split(/&/).forEach((item) => {
+        const [ key, value ] = item.split('=');
+        query[key] = value;
+      });
+    }
+
     if (route) {
       this.route = {
         path: route.routePath,
         layout: route.routeLayout,
         title: route.title,
         params,
+        query,
       };
     } else {
       this.route = {
         path: pathname,
-        params,
         layout: {},
+        params,
+        query,
       };
     }
 

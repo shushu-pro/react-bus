@@ -1,19 +1,21 @@
+import { message } from 'antd';
 import easyapi from '@shushu.pro/easyapi';
 import adapter from '@shushu.pro/adapter';
+import configs from './configs';
 import './adapter';
-import {
-  message,
-} from 'antd';
 
 
 const api = easyapi({
   env: 'development',
   baseURL: '/openapi/',
-  configs: {
+  configs,
+  configs2: {
+
 
     user: {
       login: {
-        url: 'login',
+        method: 'post',
+        url: 'user/login',
       },
       alls: {
         url: 'user/alls',
@@ -28,10 +30,7 @@ const api = easyapi({
         method: 'post',
         url: 'user/create',
       },
-      delete: {
-        method: 'post',
-        url: 'user/delete',
-      },
+
       modify: {
         method: 'post',
         url: 'user/modify',
@@ -40,10 +39,7 @@ const api = easyapi({
         method: 'post',
         url: 'user/resetPassword',
       },
-      enabled: {
-        method: 'post',
-        url: 'user/enabled',
-      },
+
       role: {
         list: {
           url: 'user/role/list',
@@ -107,27 +103,7 @@ const api = easyapi({
       list: {
         url: 'role/list',
       },
-      create: {
-        method: 'post',
-        url: 'role/create',
-      },
-      delete: {
-        method: 'post',
-        url: 'role/delete',
-      },
-      modify: {
-        method: 'post',
-        url: 'role/modify',
-      },
-      permission: {
-        list: {
-          url: 'role/permission/list',
-        },
-        modify: {
-          method: 'post',
-          url: 'role/permission/modify',
-        },
-      },
+
     },
 
     app: {

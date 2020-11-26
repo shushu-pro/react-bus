@@ -44,28 +44,29 @@ function manageUser () {
                 <Button type="danger">重置密码</Button>
               </Popconfirm>
               {row.enabled ? (
-                <Button type="danger" onClick={() => setEnabled(row.id, false)}>禁用</Button>
+                <Button type="danger" onClick={() => setDisabled(row.id, true)}>禁用</Button>
               ) : (
-                <Button type="primary" onClick={() => setEnabled(row.id, true)}>启用</Button>
+                <Button type="primary" onClick={() => setDisabled(row.id, false)}>启用</Button>
               )}
             </Space>
           ),
         },
       ],
-      dataSource (params) {
-        return api.user.alls(params);
+      dataSource () {
+        return api.manager.user.list();
       },
       scroll: { x: 1100 },
+      pagination: false,
     };
 
     function deleteUser (id) {
-      api.user.delete({ id }).then(() => {
+      api.manager.user.delete({ id }).then(() => {
         hookTable.reload();
       });
     }
 
     function resetPassword (id) {
-      api.user.resetPassword({ id })
+      api.manager.user.password.reset({ id })
         .then(({ password }) => {
           notification.success({
             placement: 'bottomRight',
@@ -79,8 +80,8 @@ function manageUser () {
         });
     }
 
-    function setEnabled (id, value) {
-      api.user.enabled({ id, enabled: value }).then(() => hookTable.reload());
+    function setDisabled (id, value) {
+      api.manager.user.disabled({ id, state: value }).then(() => hookTable.reload());
     }
   }
 
@@ -104,7 +105,7 @@ function manageUser () {
       },
       onSubmit ({ setLoading }) {
         return hookUserModifyForm.validate()
-          .then(({ nick }) => api.user.modify({ id: formValues.id, nick }))
+          .then(({ nick }) => api.manager.user.modify({ id: formValues.id, nick }))
           .then(() => {
             hookTable.reload();
           })
@@ -149,7 +150,7 @@ function manageUser () {
         userIdSet(null);
       },
       onSubmit ({ setLoading }) {
-        return api.user.role.modify({ id: userId, roles: roleValues })
+        return api.manager.user.role.modify({ userId, roles: roleValues })
           .then(() => {
 
           })
@@ -161,20 +162,20 @@ function manageUser () {
 
     function pickRole (values) {
       roleValuesSet(values);
-      console.info({ values });
+      // console.info({ values });
     }
 
     // 拉取用户角色和角色列表
     function fetchData (params) {
       loadingSet(true);
       Promise.all([
-        api.user.role.list({ id: userId }),
-        api.role.list(),
+        api.manager.role.list(),
+        api.manager.user.role.list({ userId }),
       ])
-        .then(([ userRoleList, { list: roleList } ]) => {
+        .then(([ { list: roleList }, { list: userRoleList } ]) => {
           dialogDataSet({
-            userRoleList,
             roleList: adapter({ id: 'value', label: true }, roleList),
+            userRoleList,
           });
           roleValuesSet(userRoleList);
           // console.info({
@@ -193,7 +194,7 @@ function manageUser () {
       fields: [
         {
           label: '用户名',
-          name: 'name',
+          name: 'user',
           rules: [
             { required: true },
           ],
@@ -222,7 +223,7 @@ function manageUser () {
       },
       onSubmit ({ setLoading }) {
         return hookUserAddForm.validate()
-          .then((values) => api.user.create(values))
+          .then((values) => api.manager.user.create(values))
           .then((data) => {
             passwordTextSet(data.password);
             hookTable.reload();

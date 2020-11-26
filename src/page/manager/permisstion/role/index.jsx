@@ -36,7 +36,7 @@ function Role () {
       },
       onSubmit ({ setLoading }) {
         return hookCreateForm.validate()
-          .then((values) => api.role.create(values))
+          .then((values) => api.manager.role.create(values))
           .then(() => hookDataList.reload())
           .finally(() => {
             setLoading(false);
@@ -76,12 +76,12 @@ function Role () {
         },
 
       ],
-      dataSource: (params) => api.role.list(params),
+      dataSource: (params) => api.manager.role.list(params),
       scroll: { x: 600 },
     };
 
     function submitDelete (id) {
-      api.role.delete({ id }).then(() => {
+      api.manager.role.delete({ id }).then(() => {
         hookDataList.reload();
       });
     }
@@ -110,7 +110,7 @@ function Role () {
       },
       onSubmit ({ setLoading }) {
         return hookForm.validate()
-          .then(({ label }) => api.role.modify({ id: formValues.id, label }))
+          .then(({ label }) => api.manager.role.modify({ id: formValues.id, label }))
           .then(() => {
             hookDataList.reload();
           })
@@ -183,9 +183,9 @@ function Role () {
           }
         });
 
-        console.info({ modifiedFunctionList });
+        // console.info({ modifiedFunctionList });
         if (modifiedFunctionList.length > 0) {
-          return api.role.permission.modify({ id: roleId, functionList: modifiedFunctionList });
+          return api.manager.role.function.modify({ id: roleId, functionList: modifiedFunctionList });
         }
       },
       afterClose () {
@@ -197,12 +197,12 @@ function Role () {
       // console.info('拉取角色权限');
       loadingSet(true);
       Promise.all([
-        api.module.list(),
-        api.module.function.list(),
-        api.module.functionGroup.list(),
-        api.role.permission.list({ id: roleId }),
+        api.manager.module.list(),
+        api.manager.module.function.list(),
+        api.manager.module.function.group.list(),
+        api.manager.role.function.list({ id: roleId }),
       ])
-        .then(([ { list: moduleList }, moduleFunctionList, moduleFunctionGroupList, rolePermissionList ]) => {
+        .then(([ { list: moduleList }, { list: moduleFunctionList }, { list: moduleFunctionGroupList }, { list: rolePermissionList } ]) => {
           loadingSet(false);
           roleSettingDataSet({
             moduleList, moduleFunctionList, moduleFunctionGroupList, rolePermissionList: rolePermissionList.map((item) => item.moduleFunctionId),
@@ -269,7 +269,6 @@ function Role () {
       });
 
       // 权限
-      const moduleFunctionMap = {};
       moduleFunctionList.forEach(({ id, label, symbol, groupId }) => {
         const groupItem = moduleFunctionGroupMap[groupId];
         if (!groupItem) {
@@ -283,7 +282,6 @@ function Role () {
 
       treeDataSet(walkTree(treeData));
       checkedKeysSet([ ...rolePermissionList ]);
-
 
       //   console.info({ treeData });
 

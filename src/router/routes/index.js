@@ -1,6 +1,7 @@
 import other from './other';
 import user from './user';
-import manage from './manage';
+import manager from './manager';
+import app from './app';
 
 export default [
   {
@@ -10,7 +11,8 @@ export default [
     children: [
       ...other,
       ...user,
-      ...manage,
+      ...manager,
+      ...app,
     ],
   },
 ];

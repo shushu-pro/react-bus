@@ -1,12 +1,12 @@
-import React from 'react'
-import './index.less'
+import React from 'react';
+import './index.less';
 
-export default Projects
+export default Projects;
 
 function Projects (params) {
   return (
     <div className="Projects">
-      Projects
+      开发中...
     </div>
-  )
+  );
 }

@@ -16,7 +16,7 @@ function SMTable ({
   const dataSource = Array.isArray(hook.dataSource) ? hook.dataSource : (props.dataSource || []);
   const [ tableData, tableDataSet ] = useState({
     dataSource,
-    total: dataSource.length || 90,
+    total: dataSource.length,
   });
   let loadData = null;
 
@@ -28,6 +28,8 @@ function SMTable ({
 
   bindExports();
 
+  const noPagination = props.pagination === false || hook.pagination === false;
+
   return (
     <Table
       className="SMTable"
@@ -35,7 +37,7 @@ function SMTable ({
       {...createHookProps()}
       loading={loading}
       dataSource={tableData.dataSource}
-      pagination={props.pagination === false ? false : {
+      pagination={noPagination ? false : {
         ...props.pagination,
         ...hook.pagination,
         current: params.page,

@@ -37,7 +37,7 @@ function PermissionModule () {
       },
       onSubmit ({ setLoading }) {
         return hookCreateForm.validate()
-          .then((values) => api.module.create(values))
+          .then((values) => api.manager.module.create(values))
           .then(() => hookModuleList.reload())
           .finally(() => {
             setLoading(false);
@@ -88,12 +88,12 @@ function PermissionModule () {
         },
 
       ],
-      dataSource: (params) => api.module.list(params),
+      dataSource: (params) => api.manager.module.list(params),
       scroll: { x: 600 },
     };
 
     function submitDelete (id) {
-      api.module.delete({ id }).then(() => {
+      api.manager.module.delete({ id }).then(() => {
         hookModuleList.reload();
       });
     }
@@ -225,12 +225,12 @@ function PermissionModule () {
       loadingSet(true);
 
       Promise.all([
-        api.module.functionGroup.list({ id: moduleId }),
-        api.module.function.list({ id: moduleId }),
-      ]).then(([ functionGroupData, functionData ]) => {
+        api.manager.module.function.group.list({ id: moduleId }),
+        api.manager.module.function.list({ id: moduleId }),
+      ]).then(([ { list: functionGroupList }, { list: functionList } ]) => {
         loadingSet(false);
-        functionGroupDataSet(functionGroupData);
-        functionDataSet(functionData);
+        functionGroupDataSet(functionGroupList);
+        functionDataSet(functionList);
       });
     }
 
@@ -239,9 +239,9 @@ function PermissionModule () {
         .then(({ label, symbol }) => {
           const { id, parentId } = groupEditorValues;
           if (id) {
-            return api.module.functionGroup.modify({ id, label, symbol });
+            return api.manager.module.function.group.modify({ id, label, symbol });
           }
-          return api.module.functionGroup.create({ moduleId, parentId, label, symbol });
+          return api.manager.module.function.group.create({ moduleId, parentId, label, symbol });
         })
         .then(() => {
           activeTabKeySet('index');
@@ -255,9 +255,9 @@ function PermissionModule () {
           const { id, groupId } = permissionEditorValues;
           // 编辑模式
           if (id) {
-            return api.module.function.modify({ id, label, symbol });
+            return api.manager.module.function.modify({ id, label, symbol });
           }
-          return api.module.function.create({ moduleId, groupId, label, symbol });
+          return api.manager.module.function.create({ moduleId, groupId, label, symbol });
         })
         .then(() => {
           activeTabKeySet('index');
@@ -338,7 +338,7 @@ function PermissionModule () {
                         Modal.confirm({
                           title: '确定删除该权限？',
                           content: '只允许删除未使用的权限',
-                          onOk: () => api.module.function
+                          onOk: () => api.manager.module.function
                             .delete({ id })
                             .then(() => {
                               fetchModulePermission();
@@ -402,7 +402,7 @@ function PermissionModule () {
                             Modal.confirm({
                               title: '确定删除该分组？',
                               content: '只允许删除空分组',
-                              onOk: () => api.module.functionGroup
+                              onOk: () => api.manager.module.function.group
                                 .delete({ id })
                                 .then(() => {
                                   fetchModulePermission();

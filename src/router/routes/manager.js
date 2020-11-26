@@ -1,7 +1,7 @@
 
 export default [
   {
-    path: 'manage',
+    path: 'manager',
     layout: {
       header: true,
       // breadcrumb: true,
@@ -10,7 +10,7 @@ export default [
       {
         title: '用户管理',
         path: 'user',
-        lazy: () => import('@/page/manage/user'),
+        lazy: () => import('@/page/manager/user'),
       },
       {
         path: 'permisstion',
@@ -20,13 +20,12 @@ export default [
           {
             title: '权限管理',
             path: '',
-            lazy: () => import('@/page/manage/permisstion'),
-            // redirect: '/manage/permisstion/module',
+            redirect: '/manager/permisstion/module',
           },
           {
             title: '模块管理',
             path: 'module',
-            lazy: () => import('@/page/manage/permisstion/module'),
+            lazy: () => import('@/page/manager/permisstion'),
           },
 
         ],

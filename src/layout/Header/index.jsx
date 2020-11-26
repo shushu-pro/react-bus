@@ -46,8 +46,8 @@ function Header () {
   function renderNavBar () {
     const { path } = useRoute();
     let menuKey = path;
-    if (/^\/manage\/permisstion/.test(path)) {
-      menuKey = '/manage/permisstion';
+    if (/^\/manager\/permisstion/.test(path)) {
+      menuKey = '/manager/permisstion';
     }
 
     useEffect(() => {
@@ -57,11 +57,11 @@ function Header () {
     // console.info({ menuKey });
     return (
       <Menu className={styles.navBar} selectedKeys={[ menuKey ]} mode="horizontal">
-        <Menu.Item key="/manage/user" icon={<QuestionCircleOutlined />}>
-          <Link to="/manage/user">用户管理</Link>
+        <Menu.Item key="/manager/user" icon={<QuestionCircleOutlined />}>
+          <Link to="/manager/user">用户管理</Link>
         </Menu.Item>
-        <Menu.Item key="/manage/permisstion" icon={<DropboxOutlined />}>
-          <Link to="/manage/permisstion">权限管理</Link>
+        <Menu.Item key="/manager/permisstion" icon={<DropboxOutlined />}>
+          <Link to="/manager/permisstion">权限管理</Link>
         </Menu.Item>
       </Menu>
     );

@@ -46,9 +46,9 @@ function Apps ({ hook }) {
           dataSource={appList}
           renderItem={(item) => (
             <List.Item>
-              <Card hoverable cover={<img alt={item.title} src={item.cover} />} onClick={() => history.push(`/app?id=${item.id}`)}>
+              <Card hoverable cover={<img alt={item.name} src={item.cover} />} onClick={() => history.push(`/app?id=${item.id}`)}>
                 <Card.Meta
-                  title={<h3>{item.title}</h3>}
+                  title={<h3>{item.name}</h3>}
                   description={
                     <div>{item.description}</div>
                   }
@@ -68,21 +68,26 @@ function Apps ({ hook }) {
   );
 
   function fetchAppList () {
-    const list = [
-    ];
+    // const list = [
+    // ];
 
-    for (let i = 0; i < 20; i++) {
-      list.push({
-        id: i,
-        title: '一朵云运营平台',
-        cover: [ cover1, cover2, cover3, cover4 ][Math.floor(Math.random() * 4)],
-        description: '那是一种内在的东西， 他们到达不了，也无法触及的',
+    // for (let i = 0; i < 20; i++) {
+    //   list.push({
+    //     id: i,
+    //     title: '一朵云运营平台',
+    //     cover: [ cover1, cover2, cover3, cover4 ][Math.floor(Math.random() * 4)],
+    //     description: '那是一种内在的东西， 他们到达不了，也无法触及的',
+    //   });
+    // }
+
+    api.app.list()
+      .then(({ list }) => {
+        list.forEach((item) => {
+          item.cover = [ cover1, cover2, cover3, cover4 ][Math.floor(Math.random() * 4)];
+          item.description = item.description || item.name;
+        });
+        appListSet(list);
       });
-    }
-
-    api.app.all().then((list) => {
-      appListSet(list);
-    });
   }
 
   function bindExports () {
@@ -105,8 +110,9 @@ function Apps ({ hook }) {
       render: () => (<SMForm hook={hookCreateForm} />),
       onSubmit ({ setLoading }) {
         return hookCreateForm.validate()
-          .then((values) => {
-
+          .then((values) => api.app.create(values))
+          .then(() => {
+            fetchAppList();
           })
           .finally(() => {
             setLoading(false);
