@@ -23,7 +23,11 @@ function SMTable ({
   // console.info('SMTable.render')
 
   useEffect(() => {
-    loadData && loadData();
+    if (loadData) {
+      loadData();
+    } else {
+      tableDataSet({ dataSource, total: dataSource.length });
+    }
   }, [ params ]);
 
   bindExports();

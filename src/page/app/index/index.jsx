@@ -3,7 +3,6 @@ import { Tabs } from 'antd';
 import { useRoute } from '@/router';
 import Info from './Info';
 import Member from './Member';
-import Api from './Api';
 
 export default app;
 
@@ -18,9 +17,6 @@ function app () {
         </Tabs.TabPane>
         <Tabs.TabPane tab="用户管理" key="member">
           <Member appId={appId} />
-        </Tabs.TabPane>
-        <Tabs.TabPane tab="接口管理" key="api">
-          <Api appId={appId} />
         </Tabs.TabPane>
       </Tabs>
     </>

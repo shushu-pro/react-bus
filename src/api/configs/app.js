@@ -47,4 +47,107 @@ export default {
     },
 
   },
+
+  category: {
+    list: {
+      url: 'app/category/list',
+      responseData: {
+        list: {
+          id: [ true, 'key' ],
+          name: 'title',
+          parentId: true,
+        },
+      },
+    },
+
+    create: {
+      method: 'post',
+      url: 'app/category/create',
+    },
+
+    modify: {
+      method: 'post',
+      url: 'app/category/modify',
+    },
+
+    delete: {
+      method: 'post',
+      url: 'app/category/delete',
+    },
+
+    move: {
+      method: 'post',
+      url: 'app/category/move',
+    },
+
+  },
+
+  api: {
+    list: {
+      url: 'app/api/list',
+      responseData: {
+        list: {
+          id: [ true, 'key' ],
+          name: 'title',
+          categoryId: 'parentId',
+          $increase: {
+            $key: 'isLeaf',
+            $value: () => true,
+          },
+        },
+      },
+    },
+    create: {
+      method: 'post',
+      url: 'app/api/create',
+    },
+    modify: {
+      method: 'post',
+      url: 'app/api/modify',
+    },
+    delete: {
+      method: 'post',
+      url: 'app/api/delete',
+      errorIgnore: false,
+    },
+    detail: {
+      url: 'app/api/detail',
+      responseData: {
+        $strict: false,
+        method: [ true, {
+          $key: 'methodText',
+          $enum: [ 'GET', 'POST' ],
+        } ],
+        mockReqDoc: {
+          key: [ true, 'name' ],
+          types: [ {
+            $value: (value) => value.filter((item) => item !== 'null'),
+          },
+          {
+            $key: 'required',
+            $value: (value) => (value.includes('null') ? '否' : '是'),
+          },
+          ],
+          $increase: {
+            $key: 'defaultValue',
+            $value: () => '-',
+          },
+          description: true,
+        },
+        mockResDoc: true,
+      },
+      mock2 (data) {
+        return {
+          code: 0,
+          data: {
+            apiId: data.apiId,
+            name: '接口名称',
+            path: 'jjhjhj',
+            method: 0,
+            methodText: 'GET',
+          },
+        };
+      },
+    },
+  },
 };

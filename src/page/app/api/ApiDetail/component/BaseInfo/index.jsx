@@ -1,28 +1,38 @@
 import { api, mockapi } from '@/api';
 import { SMDialog, SMForm } from '@/package/shanmao';
-import { Button, Card, Modal, Input, Descriptions } from 'antd';
-import React, { useState } from 'react';
+import { Button, Card, Modal, Input, Descriptions, message, Space } from 'antd';
+import React, { useState, useEffect } from 'react';
 import JSONEditor from '@/component/Editor/JSONEditor';
 
 import './index.less';
+import app from '@/api/configs/app';
+
 
 export default BaseInfo;
 
-const { message } = Modal;
 
-function BaseInfo ({ projectId, apiDetail, updateAPI }) {
+function BaseInfo ({ appId, apiDetail, updateAPI }) {
   const hookMockDialog = getHookMockDialog();
   const hookEditDialog = getHookEditDialog();
+  const [ isFavorite, isFavoriteSet ] = useState(false);
+  const apiId = apiDetail.id;
+
+  useEffect(() => {
+    if (apiId) {
+      fetchFavoriteState();
+    }
+  }, [ apiId ]);
 
   return (
     <Card
       className="BaseInfo"
       title="基础信息"
       extra={(
-        <>
-          <Button type="primary" style={{ marginRight: '8px' }} onClick={() => hookMockDialog.open()}>MOCK接口</Button>
-          <Button type="primary" style={{ marginRight: '8px' }} onClick={() => hookEditDialog.open()}>编辑</Button>
-        </>
+        <Space>
+          <Button type="primary" onClick={() => hookMockDialog.open()}>MOCK</Button>
+          <Button type="primary" onClick={() => hookEditDialog.open()}>编辑</Button>
+          <Button type={isFavorite ? 'default' : 'primary'} onClick={favoriteToggle}>关注</Button>
+        </Space>
       )}
     >
       <Descriptions>
@@ -62,7 +72,7 @@ function BaseInfo ({ projectId, apiDetail, updateAPI }) {
         }
         return (
           <div>
-            <h4>请求参数：</h4>
+            <h4>请求参数：222</h4>
             <JSONEditor hook={hookParamsJSONEditor} />
             <h4 style={{ marginTop: '8px' }}>响应数据：</h4>
             {content}
@@ -80,7 +90,10 @@ function BaseInfo ({ projectId, apiDetail, updateAPI }) {
           } catch (err) {
             return message.error('请求参数错误，请检查输入的是否符合JSON格式');
           }
-          mockapi.send(sendData, { method: apiDetail.methodText, url: `${projectId}/${apiDetail.path}` })
+          console.info({
+            appId, apiDetail,
+          });
+          mockapi.send(sendData, { method: apiDetail.methodText, url: `${appId}/${apiDetail.path}` })
             .then((data) => {
               MOCKDataSet(JSON.stringify(data));
             })
@@ -158,5 +171,19 @@ function BaseInfo ({ projectId, apiDetail, updateAPI }) {
           });
       },
     };
+  }
+
+  function favoriteToggle () {
+    api.user.favorite.api[isFavorite ? 'remove' : 'add']({ apiId })
+      .then(() => {
+        fetchFavoriteState();
+      });
+  }
+
+  function fetchFavoriteState () {
+    api.user.favorite.api.enabled({ apiId })
+      .then((state) => {
+        isFavoriteSet(state);
+      });
   }
 }

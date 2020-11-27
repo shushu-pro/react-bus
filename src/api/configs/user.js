@@ -15,4 +15,20 @@ export default {
       url: 'user/role/list',
     },
   },
+
+  favorite: {
+    api: {
+      enabled: {
+        url: 'user/favorite/api/enabled',
+      },
+      add: {
+        method: 'post',
+        url: 'user/favorite/api/add',
+      },
+      remove: {
+        method: 'post',
+        url: 'user/favorite/api/remove',
+      },
+    },
+  },
 };

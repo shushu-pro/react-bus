@@ -6,13 +6,12 @@ import './index.less';
 export default DataXEditor;
 
 function DataXEditor (props) {
+  const { hook } = props;
+  hook.language = 'datax';
+  hook.theme = 'datax';
   const nextProps = {
     ...props,
-    hook: {
-      ...props.hook,
-      language: 'datax',
-      theme: 'datax',
-    },
+    hook,
   };
   return (<MonacoEditor {...nextProps} />);
 }

@@ -76,7 +76,7 @@ function Router (routes) {
   }
 
   function isRedirect () {
-    return route && typeof route.redirect === 'string';
+    return route && (typeof route.redirect === 'string' || typeof route.redirect === 'object');
   }
 
   function notFound () {
@@ -93,7 +93,25 @@ function Router (routes) {
 
   function render () {
     if (isRedirect()) {
-      return renderRoutes(keepAliveRoutes, (<Redirect to={route.redirect} />));
+      let { redirect } = route;
+      let queryString;
+
+      if (typeof redirect === 'object') {
+        const { path, query } = redirect;
+        if (query === true) {
+          queryString = queryStringify(this.route.query);
+        } else if (typeof query === 'function') {
+          queryString = queryStringify(query(this.route.query));
+        } else {
+          queryString = queryStringify(query);
+        }
+        redirect = path + (queryString ? `?${queryString}` : '');
+      } else if (typeof redirect === 'function') {
+        queryString = queryStringify(redirect(this.route.query));
+        redirect = queryString ? `?${queryString}` : '';
+      }
+
+      return renderRoutes(keepAliveRoutes, (<Redirect to={redirect} />));
     }
 
     const { onNotFound, onNotLogin, onNotAuth, onDefault } = routerSwitchs;
@@ -244,4 +262,21 @@ function loadable (loader) {
       );
     },
   });
+}
+
+function queryStringify (query) {
+  const typeofQuery = typeof query;
+
+  if (typeofQuery === 'string') {
+    return query;
+  }
+
+  if (!query || typeofQuery !== 'object') {
+    return '';
+  }
+
+  return Object.keys(query).map((key) => {
+    const value = query[key];
+    return `${key}=${value}`;
+  }).join('&');
 }

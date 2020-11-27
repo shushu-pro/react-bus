@@ -179,8 +179,23 @@ const api = easyapi({
   },
 });
 
-export default { api };
+const mockapi = easyapi({
+  baseURL: '/mockapi/',
+  configs: {
+    send: {
+      url: '',
+    },
+  },
+  resolve: (responseObject) => responseObject.data,
+  request (data, config) {
+
+  },
+});
+
+
+export default { api, mockapi };
 
 export {
   api,
+  mockapi,
 };
