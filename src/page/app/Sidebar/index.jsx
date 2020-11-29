@@ -342,7 +342,7 @@ function AppSidebar () {
         children: unCategoryApis,
       });
 
-      // console.info({ categorys })
+      console.info({ categorys });
 
       return categorys;
     }

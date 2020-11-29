@@ -26,7 +26,7 @@ function Header () {
       <h1 className={styles.logo}>
         <Link to="/">
           <img src={Logo} alt="logo" />
-          @=666=@
+          磐石
         </Link>
       </h1>
     );

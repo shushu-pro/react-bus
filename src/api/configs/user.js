@@ -31,4 +31,16 @@ export default {
       },
     },
   },
+
+  message: {
+    api: {
+      list: {
+        url: 'user/message/api/list',
+      },
+      delete: {
+        method: 'post',
+        url: 'user/message/api/delete',
+      },
+    },
+  },
 };

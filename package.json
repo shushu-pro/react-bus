@@ -54,6 +54,7 @@
     "webpack-dev-server": "^3.11.0"
   },
   "dependencies": {
+    "@ant-design/icons": "^4.3.0",
     "@shushu.pro/adapter": "0.0.4",
     "@shushu.pro/datax": "0.0.2",
     "@shushu.pro/easyapi": "^0.1.15",

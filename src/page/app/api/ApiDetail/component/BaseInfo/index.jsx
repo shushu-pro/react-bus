@@ -1,11 +1,11 @@
 import { api, mockapi } from '@/api';
 import { SMDialog, SMForm } from '@/package/shanmao';
-import { Button, Card, Modal, Input, Descriptions, message, Space } from 'antd';
+import { Button, Card, Modal, Input, Descriptions, message, Space, Timeline } from 'antd';
 import React, { useState, useEffect } from 'react';
 import JSONEditor from '@/component/Editor/JSONEditor';
+import { ClockCircleOutlined } from '@ant-design/icons';
 
 import './index.less';
-import app from '@/api/configs/app';
 
 
 export default BaseInfo;
@@ -14,6 +14,7 @@ export default BaseInfo;
 function BaseInfo ({ appId, apiDetail, updateAPI }) {
   const hookMockDialog = getHookMockDialog();
   const hookEditDialog = getHookEditDialog();
+  const hookHistoryDialog = getHookHistoryDialog();
   const [ isFavorite, isFavoriteSet ] = useState(false);
   const apiId = apiDetail.id;
 
@@ -32,6 +33,7 @@ function BaseInfo ({ appId, apiDetail, updateAPI }) {
           <Button type="primary" onClick={() => hookMockDialog.open()}>MOCK</Button>
           <Button type="primary" onClick={() => hookEditDialog.open()}>编辑</Button>
           <Button type={isFavorite ? 'default' : 'primary'} onClick={favoriteToggle}>关注</Button>
+          <Button type="primary" onClick={() => hookHistoryDialog.open()}>操作记录</Button>
         </Space>
       )}
     >
@@ -43,6 +45,7 @@ function BaseInfo ({ appId, apiDetail, updateAPI }) {
       </Descriptions>
       <SMDialog hook={hookMockDialog} />
       <SMDialog hook={hookEditDialog} />
+      <SMDialog hook={hookHistoryDialog} />
     </Card>
   );
 
@@ -171,6 +174,85 @@ function BaseInfo ({ appId, apiDetail, updateAPI }) {
           });
       },
     };
+  }
+
+  function getHookHistoryDialog () {
+    const [ params, paramsSet ] = useState({
+      page: 1,
+    });
+    const [ loading, loadingSet ] = useState(false);
+    const [ TimelineJSX, TimelineJSXSet ] = useState(null);
+
+    useEffect(() => {
+      if (params.apiId) {
+        fetchHistory();
+      }
+    }, [ params ]);
+
+    return {
+      title: '操作记录',
+      width: 800,
+      loading,
+      render () {
+        return (
+          <div style={{ maxHeight: '600px', overflowY: 'scroll', paddingTop: '10px' }}>
+            {TimelineJSX}
+          </div>
+        );
+      },
+      onOpen (hook) {
+        loadingSet(true);
+        paramsSet({ page: 1, apiId });
+      },
+    };
+
+    function fetchHistory () {
+      api.history.api.list(params)
+        .then(({ list }) => {
+          const timelineItems = [];
+
+          list.forEach(({ createTime, operator, type }) => {
+            const color = ({ 'api.create': 'green', 'api.modify': 'blue' })[type];
+            timelineItems.push(
+              {
+                color,
+                dot: <ClockCircleOutlined />,
+                content: createTime,
+              },
+              {
+                color,
+                content: ({
+                  'api.create': `${operator}创建了接口`,
+                  'api.modify': (
+                    <>
+                      <span style={{ marginRight: '8px' }}>{operator}修改了接口</span>
+                      <span style={{ color: '#40a9ff', cursor: 'pointer' }} onClick={() => {}}>查看详情</span>
+                    </>
+                  ),
+                  'api.move': (
+                    <>
+                      <span style={{ marginRight: '8px' }}>{operator}移动了接口</span>
+                      <span style={{ color: '#40a9ff', cursor: 'pointer' }} onClick={() => {}}>查看详情</span>
+                    </>
+                  ),
+                })[type],
+              }
+            );
+          });
+
+          TimelineJSXSet(
+            <Timeline>{
+              timelineItems.map(({ color, dot, content }) => (
+                <Timeline.Item color={color} dot={dot}>{content}</Timeline.Item>
+              ))
+            }
+            </Timeline>
+          );
+        })
+        .finally(() => {
+          loadingSet(false);
+        });
+    }
   }
 
   function favoriteToggle () {
