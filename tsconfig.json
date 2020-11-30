@@ -8,17 +8,17 @@
         "noImplicitAny": false,
         "jsx": "react",
         "baseUrl": ".",
+        "allowJs": true,
         "paths": {
             "@/*": [
                 "src/*"
             ]
-        }
+        },
+        "outDir": "./dist", // 输出目录
     },
-    "exclude": [
-        "node_modules",
-        "dist",
-        "dll"
-    ]
+    "include": [
+        "src/**/*"
+    ],
 }
 // {
 //     "compilerOptions": {

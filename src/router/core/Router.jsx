@@ -76,7 +76,7 @@ function Router (routes) {
   }
 
   function isRedirect () {
-    return route && (typeof route.redirect === 'string' || typeof route.redirect === 'object');
+    return route && /^(string|object|function)$/.test(typeof route.redirect);
   }
 
   function notFound () {
@@ -93,10 +93,13 @@ function Router (routes) {
 
   function render () {
     if (isRedirect()) {
-      let { redirect } = route;
+      const { redirect } = route;
       let queryString;
+      let redirectTo;
 
-      if (typeof redirect === 'object') {
+      const typeofRedirect = typeof redirect;
+
+      if (typeofRedirect === 'object') {
         const { path, query } = redirect;
         if (query === true) {
           queryString = queryStringify(this.route.query);
@@ -105,13 +108,14 @@ function Router (routes) {
         } else {
           queryString = queryStringify(query);
         }
-        redirect = path + (queryString ? `?${queryString}` : '');
-      } else if (typeof redirect === 'function') {
-        queryString = queryStringify(redirect(this.route.query));
-        redirect = queryString ? `?${queryString}` : '';
+        redirectTo = path + (queryString ? `?${queryString}` : '');
+      } else if (typeofRedirect === 'function') {
+        redirectTo = redirect(this.route.query);
+      } else {
+        redirectTo = redirect;
       }
 
-      return renderRoutes(keepAliveRoutes, (<Redirect to={redirect} />));
+      return renderRoutes(keepAliveRoutes, (<Redirect to={redirectTo} />));
     }
 
     const { onNotFound, onNotLogin, onNotAuth, onDefault } = routerSwitchs;
