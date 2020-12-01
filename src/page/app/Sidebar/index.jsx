@@ -110,20 +110,20 @@ function AppSidebar () {
         wrapperCol: { span: 17 },
       },
       fields: [
-        [ '项目名称', 'name', {
+        [ '应用名称', 'name', {
           maxlength: 10,
           rules: [
             { required: true, message: '请输入项目名称' },
           ],
         } ],
-        [ '项目描述', 'description', {
+        [ '应用描述', 'description', {
           maxlength: 40,
         } ],
       ],
     };
 
     const hookProjectSettingDialog = {
-      title: '项目设置',
+      title: '应用设置',
       okButtonProps: {
         props: {
           loading: false,
@@ -159,7 +159,7 @@ function AppSidebar () {
             style={{ float: 'right' }}
             onClick={() => hookProjectSettingDialog.open()}
           >
-            项目设置
+            应用设置
           </Button>
           <Button
             type="primary"

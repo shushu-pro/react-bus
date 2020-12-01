@@ -19,7 +19,15 @@ export default [
             path: ':type',
             lazy: () => import('@/page/user/center'),
           },
+
         ],
+      },
+      {
+
+        title: '个人设置',
+        path: 'settings',
+        lazy: () => import('@/page/user/settings'),
+
       },
     ],
   },
