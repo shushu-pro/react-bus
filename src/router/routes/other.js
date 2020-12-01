@@ -4,7 +4,7 @@ export default [
 
   {
     path: '',
-    redirect: '/home',
+    redirect: '/user/center/apps',
   },
 
   // {
@@ -13,12 +13,12 @@ export default [
   //   page: () => import('@/page/ppk-ts'),
   // },
 
-  {
-    title: '首页',
-    path: 'home',
-    page: home, // () => import('@/page/home'),
-    keepAlive: [ '/manage/user' ],
-  },
+  // {
+  //   title: '首页',
+  //   path: 'home',
+  //   page: home, // () => import('@/page/home'),
+  //   keepAlive: [ '/manage/user' ],
+  // },
 
   {
     path: 'editor',

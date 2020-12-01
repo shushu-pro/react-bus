@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { Button, Layout, message, Tree, Tooltip, Modal } from 'antd';
 
-import { useRouteMatch, Link } from 'react-router-dom';
+import { useRouteMatch, Link, useHistory } from 'react-router-dom';
 import { SMDialog, SMForm } from '@/package/shanmao';
 import { api } from '@/api';
 import adapter from '@shushu.pro/adapter';
@@ -9,12 +9,14 @@ import { PlusCircleOutlined, PlusOutlined, EditOutlined, DeleteOutlined } from '
 import tower from '@/package/tower';
 
 import { useRoute } from '@/router';
+import withProps from '@/hoc/withProps';
 import styles from './index.less';
 
-export default AppSidebar;
+export default withProps({ auth: true })(AppSidebar);
 
-function AppSidebar () {
+function AppSidebar ({ auth }) {
   const { query: { appId } } = useRoute();
+  const history = useHistory();
   const [ sidebarTop, sidebarTopSet ] = useState(65);
   const [ appDetail, appDetailSet ] = useState({});
   const [ rawCategorys, rawCategorysSet ] = useState(null);
@@ -154,13 +156,16 @@ function AppSidebar () {
       <div className={styles.topbar}>
         <h3>
           <span className={styles.appName} title={appDetail.name}>{ appDetail.name || 'loading...' }</span>
-          <Button
-            type="primary"
-            style={{ float: 'right' }}
-            onClick={() => hookProjectSettingDialog.open()}
-          >
-            应用设置
-          </Button>
+          {auth.has('app.modify') && (
+            <Button
+              type="primary"
+              style={{ float: 'right' }}
+              onClick={() => history.push(`/app/info?appId=${appId}`)}
+              // onClick={() => hookProjectSettingDialog.open()}
+            >
+              应用设置
+            </Button>
+          )}
           <Button
             type="primary"
             style={{ float: 'right', marginRight: '8px' }}

@@ -3,14 +3,15 @@ import { Tabs, Button } from 'antd';
 import { AppleOutlined, AndroidOutlined } from '@ant-design/icons';
 import { useRouteMatch, useHistory } from 'react-router-dom';
 import { useRoute } from '@/router';
+import withProps from '@/hoc/withProps';
 import Apps from './component/Apps';
 import Projects from './component/Projects';
 import styles from './index.less';
 
 
-export default UserCenter;
+export default withProps({ auth: true })(UserCenter);
 
-function UserCenter () {
+function UserCenter ({ auth }) {
   const route = useRoute();
   const history = useHistory();
   const { params: { type: tabKey } } = route;
@@ -43,7 +44,7 @@ function UserCenter () {
 
     return (
       <div style={{ marginRight: '10px' }}>
-        <Button type="primary" onClick={openCreateDialog}>{buttonText}</Button>
+        {auth.has('app.create') && <Button type="primary" onClick={openCreateDialog}>{buttonText}</Button>}
       </div>
     );
 

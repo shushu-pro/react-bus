@@ -6,6 +6,10 @@ export default {
     url: 'user/login',
   },
 
+  info: {
+    url: 'user/info',
+  },
+
   list: {
     url: 'user/list',
   },

@@ -7,8 +7,7 @@ import Member from './Member';
 export default app;
 
 function app () {
-  const { query: { id: appId } } = useRoute();
-
+  const { query: { appId } } = useRoute();
   return (
     <>
       <Tabs style={{ margin: '20px' }} defaultActiveKey="member">

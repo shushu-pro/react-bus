@@ -12,6 +12,7 @@ export default {
       return { auths };
     },
     setInfo (state, payload) {
+      console.info({ payload });
       return { ...payload };
     },
   },
@@ -23,9 +24,9 @@ export default {
           ctx.dispatch('user.setAuths', list);
         });
     },
-    async setInfo (payload, context) {
-      context.dispatch('user.setInfo', payload);
-    },
+    // async setInfo (payload, context) {
+    //   context.dispatch('user.setInfo', payload);
+    // },
     async login (payload, context) {
       api.user.login().then((data) => {
         context.dispatch('user.setInfo', payload);
@@ -33,6 +34,13 @@ export default {
     },
     async logout () {
       console.info('logout');
+    },
+
+    async fetch (payload, ctx) {
+      return api.user.info()
+        .then(({ auths, info: { user, nick } }) => {
+          ctx.dispatch('user.setInfo', { auths, user, nick });
+        });
     },
   },
 };

@@ -3,17 +3,19 @@ import { Link } from 'react-router-dom';
 import { Tooltip, Space, Menu } from 'antd';
 import { QuestionCircleOutlined, DropboxOutlined } from '@ant-design/icons';
 import { useRoute } from '@/router';
+import withProps from '@/hoc/withProps';
 import styles from './index.less';
 import Logo from './img/logo.svg';
 import Message from './component/Message';
 import Help from './component/Help';
 import Avatar from './component/Avatar';
 
-export default Header;
+
+export default withProps({ auth: true })(Header);
 
 const timer = null;
 
-function Header () {
+function Header ({ auth }) {
   return (
     <div className={styles.Header}>
       {renderLogo()}
@@ -27,7 +29,7 @@ function Header () {
       <h1 className={styles.logo}>
         <Link to="/">
           <img src={Logo} alt="logo" />
-         磐石
+          磐石
         </Link>
       </h1>
     );
@@ -51,18 +53,22 @@ function Header () {
     }
 
     useEffect(() => {
-      console.info('renderNavBar.mouted');
+      // console.info('renderNavBar.mouted');
     }, [ ]);
 
     // console.info({ menuKey });
     return (
       <Menu className={styles.navBar} selectedKeys={[ menuKey ]} mode="horizontal">
-        <Menu.Item key="/manager/user" icon={<QuestionCircleOutlined />}>
-          <Link to="/manager/user">用户管理</Link>
-        </Menu.Item>
-        <Menu.Item key="/manager/permisstion" icon={<DropboxOutlined />}>
-          <Link to="/manager/permisstion">权限管理</Link>
-        </Menu.Item>
+        {auth.has('user') && (
+          <Menu.Item key="/manager/user" icon={<QuestionCircleOutlined />}>
+            <Link to="/manager/user">用户管理</Link>
+          </Menu.Item>
+        )}
+        {auth.has('role') && (
+          <Menu.Item key="/manager/permisstion" icon={<DropboxOutlined />}>
+            <Link to="/manager/permisstion">权限管理</Link>
+          </Menu.Item>
+        )}
       </Menu>
     );
   }
