@@ -5,7 +5,6 @@ const webpack = require('webpack');
 const cwd = process.cwd();
 const resolve = (dir) => path.resolve(cwd, dir);
 
-
 exports.extends = extendsConfig;
 
 function extendsConfig (config) {
@@ -18,7 +17,8 @@ function extendsConfig (config) {
     ...rest
   } = config;
   const ISDEV = mode === 'development';
-  const ISBUILD = mode === 'production';
+
+  const baseURL = ISDEV ? '/' : '/panshi/'; // 当项目通过nginx反向代理访问的使用，请配置
 
   const { rules } = module;
 
@@ -36,7 +36,7 @@ function extendsConfig (config) {
     },
 
     output: {
-      publicPath: '/',
+      publicPath: baseURL,
       path: resolve('dist'),
       // filename: 'js/[name].[contenthash].js',
       filename: `js/[name].[${mode === 'production' ? 'contenthash' : 'hash'}].js`,
@@ -101,7 +101,8 @@ function extendsConfig (config) {
 
     plugins: [
       new HtmlWebpackPlugin({
-        publicPath: '/',
+        // publicPath: '/panshi/',
+        publicPath: baseURL,
         filename: resolve('./dist/index.html'), // html模板的生成路径
         template: './src/index.ejs', // html模板
         inject: true, // true：默认值，script标签位于html文件的 body 底部
@@ -120,6 +121,7 @@ function extendsConfig (config) {
         }),
       }),
       new webpack.DefinePlugin({
+        'process.env.baseURL': JSON.stringify(baseURL),
         'process.env.NODE_ENV': JSON.stringify(process.env.NODE_ENV),
         'process.env.built': JSON.stringify(String(new Date())),
       }),

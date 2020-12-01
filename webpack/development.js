@@ -27,16 +27,16 @@ module.exports = base.extends({
       '/openapi/': {
         target: 'http://localhost:444/', // 开发环境
         changeOrigin: true,
-        // pathRewrite: {
-        //   '^/panshi/openapi/': '/openapi/',
-        // },
+        pathRewrite: {
+          '/openapi/': '/openapi/',
+        },
       },
       '/mockapi/': {
         target: 'http://localhost:444/', // 开发环境
         changeOrigin: true,
-        // pathRewrite: {
-        //   '^/panshi/mockapi/': '/mockapi/',
-        // },
+        pathRewrite: {
+          '/mockapi/': '/mockapi/',
+        },
       },
     },
   },

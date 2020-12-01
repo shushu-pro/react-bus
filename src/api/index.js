@@ -4,10 +4,11 @@ import adapter from '@shushu.pro/adapter';
 import configs from './configs';
 import './adapter';
 
+const { baseURL } = process.env;
 
 const api = easyapi({
   env: 'development',
-  baseURL: '/openapi/',
+  baseURL: `${baseURL}openapi/`,
   configs,
   configs2: {
 
@@ -180,7 +181,7 @@ const api = easyapi({
 });
 
 const mockapi = easyapi({
-  baseURL: '/mockapi/',
+  baseURL: `${baseURL}mockapi/`,
   configs: {
     send: {
       url: '',

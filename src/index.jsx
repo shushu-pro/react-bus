@@ -20,4 +20,4 @@ export default function render () {
 
 
 kvlog('NODE_ENV', process.env.NODE_ENV);
-kvlog('BUILt', process.env.built);
+kvlog('BUILT', process.env.built);

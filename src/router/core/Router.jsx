@@ -222,6 +222,8 @@ function Router (routes) {
         // 生产路由地址
         route.routePath = pathsNextText;
 
+        console.info({ routePath: route.routePath });
+
         // 判断是动态还是静态路径的路由
         if (/:/.test(pathsNextText)) {
           dynamicRoutes.push(route);

@@ -5,7 +5,7 @@ import Router from './Router';
 
 let activeRoute = null;
 
-export default function createRouter ({ routes, Layout, beforeRouter }) {
+export default function createRouter ({ routes, Layout, beforeRouter, baseURL }) {
   const router = new Router(routes);
   const props = {
     router,
@@ -13,7 +13,7 @@ export default function createRouter ({ routes, Layout, beforeRouter }) {
     beforeRouter,
   };
   return () => (
-    <BrowserRouter>
+    <BrowserRouter basename={baseURL}>
       <Route render={() => <RouteRender {...props} />} />
     </BrowserRouter>
   );
