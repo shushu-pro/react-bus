@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import withProps from '@/hoc/withProps';
 import Login from '@/page/login';
+import { Redirect } from 'react-router-dom';
 import styles from './index.less';
 import Header from './Header';
 import Breadcrumb from './Breadcrumb';
@@ -16,10 +17,14 @@ const mapDispatch = (dispatch) => ({
 
 export default withProps({ mapState, mapDispatch })(({ hasLogin, router, autoLogin }) => {
   const { layout } = router.route;
+  const [ loading, loadingSet ] = useState(true);
 
   useEffect(() => {
     if (!hasLogin) {
-      autoLogin();
+      autoLogin()
+        .finally(() => {
+          loadingSet(false);
+        });
     }
   }, []);
 
@@ -29,7 +34,14 @@ export default withProps({ mapState, mapDispatch })(({ hasLogin, router, autoLog
     if (router.route.origin?.loginIgnore) {
       return <>{router.render()}</>;
     }
-    return null;
+
+    if (loading) {
+      return null;
+    }
+
+    return <Redirect to="/login" />;
+  } if (router.route.path === '/login') {
+    return <Redirect to="/" />;
   }
 
   return (

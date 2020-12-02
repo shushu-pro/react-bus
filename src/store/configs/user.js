@@ -13,7 +13,6 @@ export default {
       return { auths };
     },
     setInfo (state, payload) {
-      console.info({ payload });
       return { ...payload };
     },
   },

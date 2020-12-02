@@ -54,8 +54,10 @@ function login (props) {
         loadingSet(true);
         api.user.login({ user, password })
           .then(() => {
-            history.push('/');
-            window.location.reload();
+            // history.push('/');
+            setTimeout(() => {
+              window.location.reload();
+            });
           })
           .finally(() => [
             loadingSet(false),

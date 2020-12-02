@@ -13,6 +13,7 @@ export default {
 
   info: {
     url: 'user/info',
+    errorMessageIgnore: true,
   },
 
   password: {

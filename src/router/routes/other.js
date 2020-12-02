@@ -37,8 +37,9 @@ export default [
     lazy: () => import('@/page/appDetail'),
   },
   {
-    path: 'page04',
+    path: 'page404',
     lazy: () => import('@/page/404'),
+    loginIgnore: true,
   },
 
 ];

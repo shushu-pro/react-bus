@@ -171,13 +171,13 @@ const api = easyapi({
       return;
     }
 
-    if (config.error.message === 'NO-LOGIN') {
-      const loginURL = `${baseURL}login`;
-      if (window.location.pathname !== loginURL) {
-        window.location.href = loginURL;
-      }
-      return;
-    }
+    // if (config.error.message === 'NO-LOGIN') {
+    //   const loginURL = `${baseURL}login`;
+    //   if (window.location.pathname !== loginURL) {
+    //     window.location.href = loginURL;
+    //   }
+    //   return;
+    // }
     if (!config.meta.errorMessageIgnore) {
       message.error(config.error.message);
     }
