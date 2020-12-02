@@ -28,7 +28,7 @@ function manageUser () {
   function createHookTable () {
     return {
       columns: [
-        { title: '用户名', dataIndex: 'name', width: 200 },
+        { title: '用户名', dataIndex: 'user', width: 200 },
         { title: '昵称', dataIndex: 'nick', width: 300 },
         { title: '创建时间', dataIndex: 'createTime', width: 160 },
         {

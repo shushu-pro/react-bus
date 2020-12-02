@@ -93,9 +93,7 @@ function BaseInfo ({ appId, apiDetail, updateAPI }) {
           } catch (err) {
             return message.error('请求参数错误，请检查输入的是否符合JSON格式');
           }
-          console.info({
-            appId, apiDetail,
-          });
+
           mockapi.send(sendData, { method: apiDetail.methodText, url: `${appId}/${apiDetail.path}` })
             .then((data) => {
               MOCKDataSet(JSON.stringify(data));

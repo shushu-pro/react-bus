@@ -62,6 +62,7 @@ function Router (routes) {
         title: route.title,
         params,
         query,
+        origin: route,
       };
     } else {
       this.route = {
@@ -69,6 +70,7 @@ function Router (routes) {
         layout: {},
         params,
         query,
+        origin: route,
       };
     }
 

@@ -10,10 +10,7 @@ import Message from './component/Message';
 import Help from './component/Help';
 import Avatar from './component/Avatar';
 
-
 export default withProps({ auth: true })(Header);
-
-const timer = null;
 
 function Header ({ auth }) {
   return (

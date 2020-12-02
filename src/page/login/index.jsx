@@ -32,7 +32,7 @@ function login (props) {
   return (
     <div className={styles.content}>
       <div className={styles.main}>
-        <h2>登录@=666=@</h2>
+        <h2>登录磐石</h2>
         <Form className={styles.loginBox} form={form}>
           <Form.Item name="user" label="用户名" {...formItemProps}>
             <Input prefix={<UserOutlined className="site-form-item-icon" />} />
@@ -53,9 +53,10 @@ function login (props) {
       .then(({ user, password }) => {
         loadingSet(true);
         api.user.login({ user, password })
-          .then(() => [
-            history.push('./home'),
-          ])
+          .then(() => {
+            history.push('/');
+            window.location.reload();
+          })
           .finally(() => [
             loadingSet(false),
           ]);

@@ -6,8 +6,20 @@ export default {
     url: 'user/login',
   },
 
+  logout: {
+    method: 'post',
+    url: 'user/logout',
+  },
+
   info: {
     url: 'user/info',
+  },
+
+  password: {
+    modify: {
+      method: 'post',
+      url: 'user/password/modify',
+    },
   },
 
   list: {

@@ -39,7 +39,7 @@ function RouteRender ({ router, Layout, beforeRouter }) {
   }
 
   return (
-    <Layout router={router} />
+    <Layout router={router} route={router.route} />
   );
 }
 

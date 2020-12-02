@@ -61,7 +61,6 @@ function Member ({ appId }) {
         },
       ],
       dataSource (params) {
-        console.info('xxx');
         return api.app.member.list({ ...params, id: appId });
       },
     };

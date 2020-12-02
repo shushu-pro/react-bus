@@ -98,6 +98,9 @@ function SMForm ({
           case 'input':
             content = (<Input disabled={itemDisabled} maxLength={maxlength} placeholder={placeholder} />);
             break;
+          case 'password':
+            content = (<Input.Password disabled={itemDisabled} maxLength={maxlength} placeholder={placeholder} />);
+            break;
           case 'radio':
             content = (<Radio.Group disabled={itemDisabled} options={options} />);
             break;

@@ -100,7 +100,6 @@ function RequestInfo ({ apiDetail, updateAPI }) {
 
     useEffect(() => {
       if (apiDetail.mockReqDoc) {
-        console.info('xxxxxxxxxxx');
         docListSet(transformData(apiDetail.mockReqDoc));
         hookRequestData.reload();
       }

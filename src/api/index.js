@@ -141,7 +141,7 @@ const api = easyapi({
       code,
     } = data;
 
-    if (code === 1008) {
+    if (code === 401) {
       throw Error('NO-LOGIN');
     }
 
@@ -172,7 +172,11 @@ const api = easyapi({
     }
 
     if (config.error.message === 'NO-LOGIN') {
-      return window.alert('登录失效');
+      const loginURL = `${baseURL}login`;
+      if (window.location.pathname !== loginURL) {
+        window.location.href = loginURL;
+      }
+      return;
     }
     if (!config.meta.errorMessageIgnore) {
       message.error(config.error.message);
@@ -192,7 +196,6 @@ const mockapi = easyapi({
 
   },
 });
-
 
 export default { api, mockapi };
 

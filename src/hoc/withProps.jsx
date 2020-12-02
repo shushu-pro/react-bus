@@ -1,24 +1,32 @@
 
 import React from 'react';
-import { connect } from '@/package/haima';
-
-
-const mapStateToProps = ({ user }) => ({
-  auths: user.auths,
-});
+import { connect, getState } from '@/package/haima';
 
 export default withProps;
 
-function withProps ({ auth }) {
-  const globalProps = {};
-
-  return (Component) => connect(mapStateToProps)((props) => {
-    const localProps = {};
+// 注入常用的一些模式
+function withProps ({ mapState, mapDispatch, auth } = {}) {
+  return (Component) => {
+    let ComponentNext = Component;
 
     if (auth) {
-      localProps.auth = { has: (symbol) => props.auths.includes(symbol) };
+      ComponentNext = withAuth()(ComponentNext);
     }
 
-    return <Component {...{ ...globalProps, ...localProps, ...props }} />;
-  });
+    if (mapState || mapDispatch) {
+      ComponentNext = connect(mapState, mapDispatch)(ComponentNext);
+    }
+
+    return (props) => <ComponentNext {...props} />;
+  };
+}
+
+// 注入权限判断方法
+function withAuth () {
+  return (Component) => {
+    const localProps = {
+      auth: { has: (symbol) => getState().user.auths.includes(symbol) },
+    };
+    return (props) => <Component {...{ props, ...localProps }} />;
+  };
 }

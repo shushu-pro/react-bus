@@ -15,7 +15,9 @@ import styles from './index.less';
 export default withProps({ auth: true })(AppSidebar);
 
 function AppSidebar ({ auth }) {
-  const { query: { appId } } = useRoute();
+  let { query: { appId, apiId } } = useRoute();
+  appId = Number(appId);
+  apiId = Number(apiId);
   const history = useHistory();
   const [ sidebarTop, sidebarTopSet ] = useState(65);
   const [ appDetail, appDetailSet ] = useState({});
@@ -233,9 +235,10 @@ function AppSidebar ({ auth }) {
       onSubmit: ({ setLoading }) => hookCreateAPIForm
         .validate()
         .then((values) => api.app.api.create({ ...hookCreateAPIForm.data, ...values, path: values.path.replace(/^\/+/, '') })
-          .then(() => {
+          .then(({ apiId }) => {
             message.success('操作成功');
             fetchAppApiList();
+            history.push(`/app/api?appId=${appId}&apiId=${apiId}`);
           }))
         .finally(() => {
           setLoading(false);
@@ -347,8 +350,6 @@ function AppSidebar ({ auth }) {
         children: unCategoryApis,
       });
 
-      console.info({ categorys });
-
       return categorys;
     }
 
@@ -372,6 +373,9 @@ function AppSidebar ({ auth }) {
                       onOk: () => api.app.api
                         .delete({ id })
                         .then(() => {
+                          if (apiId === id) {
+                            history.push(`/app/api?appId=${appId}`);
+                          }
                           fetchAppApiList();
                         }),
                       onCancel () {},

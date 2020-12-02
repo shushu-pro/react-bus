@@ -29,6 +29,7 @@ export default [
     path: 'login',
     lazy: () => import('@/page/login'),
     layout: null,
+    loginIgnore: true,
   },
 
   {

@@ -170,7 +170,6 @@ function Role () {
       onSubmit ({ setLoading }) {
         const { moduleFunctionList, rolePermissionList } = roleSettingData;
         const modifiedFunctionList = [];
-        console.info({ moduleFunctionList });
         moduleFunctionList.map((item) => item.id).forEach((id) => {
           // 1. 添加的，选中了并且不在原始权限
           if (checkedKeys.includes(id) && !rolePermissionList.includes(id)) {

@@ -18,7 +18,7 @@ export default createRouter({
 
     },
     default (router) {
-      document.title = router.title();
+      document.title = router.title() || '磐石系统';
     },
   },
 });

@@ -1,5 +1,5 @@
 import React from 'react';
-import { Tooltip } from 'antd';
+import { message, Tooltip } from 'antd';
 import { QuestionCircleOutlined } from '@ant-design/icons';
 import HeaderStyles from '../../index.less';
 
@@ -10,7 +10,8 @@ function Help () {
       <div
         className={HeaderStyles.action}
         onClick={() => {
-          window.open('https://shushu.pro/panshi/doc/');
+          message.info('暂未开放');
+          // window.open('https://shushu.pro/panshi/doc/');
         }}
       >
         <QuestionCircleOutlined />

@@ -4,8 +4,6 @@ export default function textCopy (value, success) {
   input.value = value;
   input.select();
   document.execCommand('Copy'); // 执行浏览器复制命令
-
-  console.info(input.value);
   document.body.removeChild(input);
   success && success();
 }
