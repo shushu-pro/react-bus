@@ -2,9 +2,23 @@ import home from '@/page/Home';
 
 export default [
 
+  // {
+  //   path: '',
+  //   redirect: '/user/center/apps',
+  // },
   {
     path: '',
-    redirect: '/user/center/apps',
+    redirect: '/oc/product',
+  },
+
+  {
+    path: 'oc',
+    children: [
+      {
+        path: 'product',
+        lazy: () => import('@/page/oc/product'),
+      },
+    ],
   },
 
   // {
