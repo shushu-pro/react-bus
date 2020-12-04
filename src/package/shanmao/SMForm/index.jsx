@@ -128,7 +128,6 @@ function SMForm ({
             labelCol={labelCol}
             wrapperCol={wrapperCol}
             style={{ width: width ? `${width}px` : 'auto' }}
-
           >
             {content}
           </Form.Item>

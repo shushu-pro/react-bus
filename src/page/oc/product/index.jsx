@@ -1,9 +1,9 @@
 
 import React, { useEffect, useState } from 'react';
-import { Button, Card, Space, Popconfirm, Row, Col, Tree, Tooltip, Modal } from 'antd';
+import { Button, Card, Space, Popconfirm, Row, Col, Tree, Tooltip, Modal, Input, Form } from 'antd';
 import { SMDialog, SMForm, SMTable } from '@/package/shanmao';
 import { api } from '@/api';
-import { PlusCircleOutlined, PlusOutlined, EditOutlined, DeleteOutlined, SettingOutlined, LogoutOutlined } from '@ant-design/icons';
+import { PlusCircleOutlined, PlusOutlined, EditOutlined, DeleteOutlined, SettingOutlined, LogoutOutlined, MinusCircleOutlined } from '@ant-design/icons';
 import styles from './index.less';
 
 export default Product;
@@ -17,6 +17,10 @@ function Product () {
 
   useEffect(() => {
     initHookTable();
+
+    setTimeout(() => {
+      hookSpecTypeSettingDialog.open({ id: 1, label: 'SLB' });
+    }, 300);
   }, []);
 
   return (
@@ -103,10 +107,23 @@ function Product () {
     const [ treeData, treeDataSet ] = useState([]);
     const [ specTypeEditorValues, specTypeEditorValuesSet ] = useState(null);
     const [ parentId, parentIdSet ] = useState(null);
+    const [ specFields, specFieldsSet ] = useState([]);
+    const [ specTypeIsValue, specTypeIsValueSet ] = useState(false);
 
     const hookSpecTypeEditorForm = {
       values: specTypeEditorValues,
       fields: [
+        {
+          label: '规格类型',
+          name: 'type',
+          maxlength: 32,
+          rules: [ { required: true } ],
+          type: 'select',
+          options: [
+            { label: '级联分组', value: 'GROUP' },
+            { label: '值分组', value: 'VALUE' },
+          ],
+        },
         {
           label: '规格名称',
           name: 'label',
@@ -119,8 +136,64 @@ function Product () {
           maxlength: 128,
           rules: [ { required: true } ],
         },
+        {
+          label: '规格字段',
+          customRender (...args) {
+            console.info({ args, specFields });
+            return (
+              <div style={{ lineHeight: '36px' }}>
+
+                {/* <Row>
+                  <Col span={12}>
+                    字段名
+                  </Col>
+                  <Col span={12}>
+                    字段标识
+                  </Col>
+                </Row> */}
+
+                <Form.List name="fields">
+
+                  {(fields, { add, remove }) => (
+                    <>
+                      {fields.map((field) => (
+                        <Space key={field.key} style={{ display: 'flex', marginBottom: 8 }} align="baseline">
+                          <Form.Item
+                            {...field}
+                            name={[ field.name, 'label' ]}
+                            fieldKey={[ field.fieldKey, 'label' ]}
+                            rules={[ { required: true, message: '请输入字段名称' } ]}
+                          >
+                            <Input placeholder="字段名称" />
+                          </Form.Item>
+                          <Form.Item
+                            {...field}
+                            name={[ field.name, 'symbol' ]}
+                            fieldKey={[ field.fieldKey, 'symbol' ]}
+                            rules={[ { required: true, message: '请输入字段名称' } ]}
+                          >
+                            <Input placeholder="字段标识" />
+                          </Form.Item>
+                          <MinusCircleOutlined onClick={() => remove(field.name)} />
+                        </Space>
+                      ))}
+                      <Form.Item>
+                        <Button type="dashed" onClick={() => add()} block icon={<PlusOutlined />}>
+                          添加字段
+                        </Button>
+                      </Form.Item>
+                    </>
+                  )}
+                </Form.List>
+              </div>
+            );
+          },
+          visible: () => specTypeIsValue,
+        },
+
       ],
     };
+
 
     useEffect(() => {
       setTreeData(specList);
@@ -146,7 +219,16 @@ function Product () {
                 {
                   specTypeEditorValues ? (
                     <>
-                      <SMForm hook={hookSpecTypeEditorForm} />
+                      <SMForm
+                        hook={hookSpecTypeEditorForm}
+                        onValuesChange={(changeValues, allValues) => {
+                          const { type } = changeValues;
+                          // 设置规格节点的类型时，切换是否显示添加字段的表单
+                          if (type) {
+                            specTypeIsValueSet(type === 'VALUE');
+                          }
+                        }}
+                      />
                       <Space style={{ marginLeft: '100px' }}>
                         <Button type="primary" onClick={submitSpecTypeEditor}>提交</Button>
                         <Button onClick={() => specTypeEditorValuesSet(null)}>取消</Button>
@@ -160,9 +242,9 @@ function Product () {
           </Row>
         );
       },
-      onOpen (hook, { id, label }) {
+      onOpen (hook, { id, label, type }) {
         specTypeEditorValuesSet(null);
-        productInfoSet({ id, label });
+        productInfoSet({ id, label, type });
         loadingSet(true);
         fetchSpecTypeList(id);
       },
@@ -185,17 +267,18 @@ function Product () {
           key: '0',
           title,
           children: [],
+          type: 'GROUP',
         },
       };
 
       const rootChildren = groupMap[0].children;
 
-      list.forEach(({ id, label, symbol, parentId }) => {
+      list.forEach(({ id, label, type, symbol, parentId }) => {
         let groupItem = groupMap[id];
         if (!groupItem) {
           groupItem = groupMap[id] = { children: [] };
         }
-        Object.assign(groupItem, { id, label, symbol, parentId, title });
+        Object.assign(groupItem, { id, label, type, symbol, parentId, title });
 
         if (parentId) {
           let parentGroupItem = groupMap[parentId];
@@ -212,7 +295,7 @@ function Product () {
 
       treeDataSet([ groupMap[0] ]);
 
-      function title ({ id, label, key, symbol, parentId, groupId, isLeaf }) {
+      function title ({ id, label, type, key, symbol, parentId, groupId, isLeaf }) {
         return (
           <div className={styles.treeItem} key={key}>
             {label}
@@ -253,19 +336,20 @@ function Product () {
                 )
                 : (
                   <Space>
-                    <Tooltip placement="top" title="添加子规格">
-                      <span onClick={(e) => {
-                        specTypeEditorValuesSet({
-                          parentId: id,
-                          label: '',
-                          symbol: '',
-                        });
-                        e.stopPropagation();
-                      }}
-                      ><PlusOutlined />
-                      </span>
-                    </Tooltip>
-
+                    {type === 'GROUP' && (
+                      <Tooltip placement="top" title="添加子规格">
+                        <span onClick={(e) => {
+                          specTypeEditorValuesSet({
+                            parentId: id,
+                            label: '',
+                            symbol: '',
+                          });
+                          e.stopPropagation();
+                        }}
+                        ><PlusOutlined />
+                        </span>
+                      </Tooltip>
+                    )}
                     {id && (
                       <>
                         <Tooltip placement="top" title="修改规则">
@@ -274,6 +358,7 @@ function Product () {
                               specId: id,
                               label,
                               symbol,
+                              type,
                             });
                             e.stopPropagation();
                           }}
@@ -317,16 +402,19 @@ function Product () {
 
     function submitSpecTypeEditor () {
       hookSpecTypeEditorForm.validate()
-        .then(({ label, symbol }) => {
+        .then((values) => {
+          console.info({ values });
+          return values;
+        })
+        .then(({ type, label, symbol, fields }) => {
           const { parentId, specId } = specTypeEditorValues;
 
-          // console.info({ label, symbol, parentId, productId: productInfo.id });
+          console.info({ type, label, symbol, fields, specId, productId: productInfo.id, parentId });
 
-          // 修改
           if (specId) {
-            return api.oc.spec.type.modify({ specId, label, symbol });
+            return api.oc.spec.type.modify({ specId, type, label, symbol, fields });
           }
-          return api.oc.spec.type.create({ label, symbol, parentId, productId: productInfo.id });
+          return api.oc.spec.type.create({ type, label, symbol, parentId, productId: productInfo.id, fields });
         })
         .then(() => {
           specTypeEditorValuesSet(null);
@@ -363,6 +451,8 @@ function Product () {
           maxlength: 32,
           rules: [ { required: true } ],
         },
+
+
       ],
     };
 
@@ -396,6 +486,7 @@ function Product () {
       loading,
       width: 900,
       render () {
+        console.info({ specTypeOptions });
         return (
           <Row style={{ minHeight: '480px' }}>
             <Col span={14}>
@@ -408,7 +499,10 @@ function Product () {
             </Col>
             <Col span={10}>
               <div style={{ padding: '20px' }}>
-                {
+
+                <Editor />
+
+                {/* {
                   specValueEditorValues ? (
                     <>
                       <SMForm hook={hookSpecValueEditorForm} />
@@ -418,12 +512,48 @@ function Product () {
                       </Space>
                     </>
                   ) : (<div>请点击左侧编辑</div>)
-                }
+                } */}
 
               </div>
             </Col>
           </Row>
         );
+
+        function Editor () {
+          if (!specValueEditorValues) {
+            return (<div>请点击左侧编辑</div>);
+          }
+
+          if (specTypeOptions) {
+            return <SpecValueEditor />;
+          }
+
+          return <SpecGroupEditor />;
+        }
+
+        function SpecValueEditor () {
+          return (
+            <>
+              <SMForm hook={hookSpecValueEditorForm} />
+              <Space style={{ marginLeft: '100px' }}>
+                <Button type="primary" onClick={submitSpecValueEditor}>提交</Button>
+                <Button onClick={() => specValueEditorValuesSet(null)}>取消</Button>
+              </Space>
+            </>
+          );
+        }
+
+        function SpecGroupEditor () {
+          return (
+            <>
+              <SMForm hook={hookSpecValueEditorForm} />
+              <Space style={{ marginLeft: '100px' }}>
+                <Button type="primary" onClick={submitSpecValueEditor}>提交</Button>
+                <Button onClick={() => specValueEditorValuesSet(null)}>取消</Button>
+              </Space>
+            </>
+          );
+        }
       },
       onOpen (hook, { id, label }) {
         productInfoSet({ id, label });
