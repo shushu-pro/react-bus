@@ -124,4 +124,26 @@ function SMDialog ({ hook, ...props }) {
   }
 }
 
+
+function SMDialog2 ({ hook, ...props }) {
+  const {
+    title,
+    render = () => (<div />),
+    width,
+    footer,
+
+    onOpen,
+    onClose,
+    onSubmit,
+    afterClose,
+  } = hook;
+}
+
+
+// const [hookDialog] = useDialog(props)
+
+// dialogs
+// tables
+
+
 export default SMDialog;
