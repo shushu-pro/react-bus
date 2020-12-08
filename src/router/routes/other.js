@@ -1,16 +1,16 @@
-import home from '@/page/Home';
+
 
 export default [
 
-  // {
-  //   path: '',
-  //   redirect: '/user/center/apps',
-  // },
   {
     path: '',
-    redirect: '/oc/product',
-    // lazy: () => import('@/page/lab'),
+    redirect: '/user/center/apps',
   },
+  // {
+  //   path: '',
+  //   redirect: '/oc/product',
+  //   // lazy: () => import('@/page/lab'),
+  // },
 
   {
     path: 'oc',
