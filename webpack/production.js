@@ -6,9 +6,11 @@ const OptimizeCssAssetsPlugin = require('optimize-css-assets-webpack-plugin');
 const TerserPlugin = require('terser-webpack-plugin');
 const { CleanWebpackPlugin } = require('clean-webpack-plugin');
 const LodashModuleReplacementPlugin = require('lodash-webpack-plugin');
+const MonacoWebpackPlugin = require('monaco-editor-webpack-plugin');
 const cssnano = require('cssnano');
 const path = require('path');
 const base = require('./base');
+const { BUILD_PATH } = require('../config/define');
 
 const cwd = process.cwd();
 const resolve = (dir) => path.resolve(cwd, dir);
@@ -29,7 +31,6 @@ module.exports = base.extends({
   //   'antd@4.8.3/antd.js',
   //   'antd@4.8.3/antd.css',
   // ],
-
   performance: {
     maxEntrypointSize: 1024 * 1024,
     maxAssetSize: 1024 * 1024,
@@ -170,7 +171,10 @@ module.exports = base.extends({
       // dependenciesCount: 10000,
       // percentBy: null,
     }),
-
+    new MonacoWebpackPlugin({
+      publicPath: BUILD_PATH,
+      languages: [ 'json', 'javascript', 'html', 'xml' ],
+    }),
   ],
   optimization: {
     minimize: true,

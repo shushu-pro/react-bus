@@ -451,8 +451,6 @@ function Product () {
           maxlength: 32,
           rules: [ { required: true } ],
         },
-
-
       ],
     };
 

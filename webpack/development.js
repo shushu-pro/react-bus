@@ -1,5 +1,5 @@
 const path = require('path');
-// const MonacoWebpackPlugin = require('monaco-editor-webpack-plugin');
+const proxy = require('../config/proxy');
 // const HardSourceWebpackPlugin = require('hard-source-webpack-plugin');
 const base = require('./base');
 
@@ -22,29 +22,14 @@ module.exports = base.extends({
       });
     },
     historyApiFallback: true,
-    proxy: {
-      // port: 80,
-      '/openapi/': {
-        target: 'http://localhost:444/', // 开发环境
-        changeOrigin: true,
-        pathRewrite: {
-          '/openapi/': '/openapi/',
-        },
-      },
-      '/mockapi/': {
-        target: 'http://localhost:444/', // 开发环境
-        changeOrigin: true,
-        pathRewrite: {
-          '/mockapi/': '/mockapi/',
-        },
-      },
-    },
+    proxy,
   },
   devtool: 'eval-source-map',
   externals: {
     lodash: '_',
     react: 'React',
     'react-dom': 'ReactDOM',
+    moment: 'moment',
     antd: 'antd',
     'monaco-editor': 'monaco',
     '@ant-design/icons': 'icons',
@@ -53,6 +38,7 @@ module.exports = base.extends({
     'lodash@4.17.20/lodash.js',
     'react@17.0.1/react.development.js',
     'react-dom@17.0.1/react-dom.development.js',
+    'momentjs@2.29.1/moment.js',
     'antd@4.8.3/antd.js',
     'antd@4.8.3/antd.css',
     'ant-design-icons@4.2.2/index.umd.js',
@@ -61,6 +47,7 @@ module.exports = base.extends({
     'monaco-editor@0.21.2/config.js',
     'monaco-editor@0.21.2/min/vs/editor/editor.main.nls.js',
     'monaco-editor@0.21.2/min/vs/editor/editor.main.js',
+
     // 'monaco-editor@0.21.2/min/vs/language/json/jsonMode.js',
     // 'monaco-editor@0.21.2/min/vs/basic-languages/javascript/javascript.js',
 
@@ -174,8 +161,5 @@ module.exports = base.extends({
 
   plugins: [
     // new HardSourceWebpackPlugin(),
-    // new MonacoWebpackPlugin({
-    //   languages: [ 'json', 'javascript', 'html', 'xml' ],
-    // }),
   ],
 });

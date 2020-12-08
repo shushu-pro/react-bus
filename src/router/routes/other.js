@@ -8,8 +8,8 @@ export default [
   // },
   {
     path: '',
-    // redirect: '/oc/product',
-    lazy: () => import('@/page/lab'),
+    redirect: '/oc/product',
+    // lazy: () => import('@/page/lab'),
   },
 
   {

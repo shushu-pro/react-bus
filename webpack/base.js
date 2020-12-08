@@ -1,6 +1,7 @@
 const path = require('path');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const webpack = require('webpack');
+const { BUILD_PATH } = require('../config/define');
 
 const cwd = process.cwd();
 const resolve = (dir) => path.resolve(cwd, dir);
@@ -18,7 +19,7 @@ function extendsConfig (config) {
   } = config;
   const ISDEV = mode === 'development';
 
-  const baseURL = ISDEV ? '/' : '/panshi/'; // 当项目通过nginx反向代理访问的使用，请配置
+  const baseURL = ISDEV ? '/' : BUILD_PATH;
 
   const { rules } = module;
 
