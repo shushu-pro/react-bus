@@ -4,8 +4,13 @@ import { Button, Card, Modal, Input, Descriptions, message, Space, Timeline } fr
 import React, { useState, useEffect } from 'react';
 import JSONEditor from '@/component/Editor/JSONEditor';
 import { ClockCircleOutlined } from '@ant-design/icons';
-
+import 'jsondiffpatch/dist/formatters-styles/annotated.css';
+import 'jsondiffpatch/dist/formatters-styles/html.css';
 import './index.less';
+
+import * as jsondiffpatch from 'jsondiffpatch';
+
+const formattersHtml = jsondiffpatch.formatters.html;
 
 
 export default BaseInfo;
@@ -16,6 +21,15 @@ function BaseInfo ({ appId, apiDetail, updateAPI }) {
   const hookEditDialog = getHookEditDialog();
   const hookHistoryDialog = getHookHistoryDialog();
   const [ isFavorite, isFavoriteSet ] = useState(false);
+  const [ html, htmlSet ] = useState('');
+
+  const hookDiffDialog = {
+    title: '修改信息',
+    render (hook) {
+      // eslint-disable-next-line react/no-danger
+      return (<di dangerouslySetInnerHTML={{ __html: html }} />);
+    },
+  };
   const apiId = apiDetail.id;
 
   useEffect(() => {
@@ -46,6 +60,7 @@ function BaseInfo ({ appId, apiDetail, updateAPI }) {
       <SMDialog hook={hookMockDialog} />
       <SMDialog hook={hookEditDialog} />
       <SMDialog hook={hookHistoryDialog} />
+      <SMDialog hook={hookDiffDialog} />
     </Card>
   );
 
@@ -181,6 +196,7 @@ function BaseInfo ({ appId, apiDetail, updateAPI }) {
     const [ loading, loadingSet ] = useState(false);
     const [ TimelineJSX, TimelineJSXSet ] = useState(null);
 
+
     useEffect(() => {
       if (params.apiId) {
         fetchHistory();
@@ -209,7 +225,7 @@ function BaseInfo ({ appId, apiDetail, updateAPI }) {
         .then(({ list }) => {
           const timelineItems = [];
 
-          list.forEach(({ createTime, operator, type }) => {
+          list.forEach(({ createTime, operatorId, historyId, nick, type }) => {
             const color = ({ 'api.create': 'green', 'api.modify': 'blue' })[type];
             timelineItems.push(
               {
@@ -220,16 +236,29 @@ function BaseInfo ({ appId, apiDetail, updateAPI }) {
               {
                 color,
                 content: ({
-                  'api.create': `${operator}创建了接口`,
+                  'api.create': `"${nick}"创建了接口`,
                   'api.modify': (
                     <>
-                      <span style={{ marginRight: '8px' }}>{operator}修改了接口</span>
-                      <span style={{ color: '#40a9ff', cursor: 'pointer' }} onClick={() => {}}>查看详情</span>
+                      <span style={{ marginRight: '8px' }}>"{nick}"修改了接口</span>
+                      <span
+                        style={{ color: '#40a9ff', cursor: 'pointer' }}
+                        onClick={() => {
+                          api.history.api.data({ historyId }).then(({ left, right }) => {
+                            // const left = { left: 12 };
+                            const delta = jsondiffpatch.diff(left, right);
+                            const html = jsondiffpatch.formatters.html.format(delta, left);
+                            htmlSet(html);
+                            hookDiffDialog.open(html);
+                          });
+                        }}
+                      >查看详情
+                      </span>
+
                     </>
                   ),
                   'api.move': (
                     <>
-                      <span style={{ marginRight: '8px' }}>{operator}移动了接口</span>
+                      <span style={{ marginRight: '8px' }}>"{nick}"移动了接口</span>
                       <span style={{ color: '#40a9ff', cursor: 'pointer' }} onClick={() => {}}>查看详情</span>
                     </>
                   ),

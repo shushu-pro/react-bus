@@ -23,7 +23,7 @@ function MyAvatar ({ user, logout }) {
       <Dropdown overlay={<Overlay />}>
         <div>
           <Avatar size="small" className={styles.avatar} src={user.avatar} alt="avatar" />
-          <span>{user.name}</span>
+          <span>{user.nick}</span>
         </div>
       </Dropdown>
     </div>
