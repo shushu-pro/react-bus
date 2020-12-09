@@ -5,7 +5,7 @@ import './index.less';
 import { SMDialog } from '@/package/shanmao';
 import { api } from '@/api';
 import adapter from '@shushu.pro/adapter';
-import DataXEditor from '../DataXEditor';
+import DataXEditor from '@/component/Editor/DataXEditor';
 
 export default ResponseInfo;
 
