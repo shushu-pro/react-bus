@@ -116,7 +116,7 @@ export default {
         $strict: false,
         method: [ true, {
           $key: 'methodText',
-          $enum: [ 'GET', 'POST' ],
+          $enum: [ 'GET', 'POST', 'PUT', 'DELETE', 'OPTION' ],
         } ],
         mockReqDoc: {
           key: [ true, 'name' ],

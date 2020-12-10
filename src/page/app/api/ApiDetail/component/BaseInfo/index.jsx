@@ -90,7 +90,7 @@ function BaseInfo ({ appId, apiDetail, updateAPI }) {
         }
         return (
           <div>
-            <h4>请求参数：222</h4>
+            <h4>请求参数：</h4>
             <JSONEditor hook={hookParamsJSONEditor} />
             <h4 style={{ marginTop: '8px' }}>响应数据：</h4>
             {content}
@@ -108,6 +108,8 @@ function BaseInfo ({ appId, apiDetail, updateAPI }) {
           } catch (err) {
             return message.error('请求参数错误，请检查输入的是否符合JSON格式');
           }
+
+          console.info(apiDetail);
 
           mockapi.send(sendData, { method: apiDetail.methodText, url: `${appId}/${apiDetail.path}` })
             .then((data) => {
@@ -158,6 +160,9 @@ function BaseInfo ({ appId, apiDetail, updateAPI }) {
             options: [
               { label: 'GET', value: 0 },
               { label: 'POST', value: 1 },
+              { label: 'PUT', value: 2 },
+              { label: 'DELETE', value: 3 },
+              { label: 'OPTION', value: 4 },
             ],
             rules: [ { required: true, message: '请选择请求方式' } ],
           },
