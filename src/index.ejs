@@ -2,23 +2,32 @@
 <html>
 
 <head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width,initial-scale=1.0">
-    <title>磐石</title>
+  <meta charset="utf-8" />
+  <title><%=htmlWebpackPlugin.options.ENV.defaultTitle%></title>
+  <% 
+    var CDN = htmlWebpackPlugin.options.ENV.CDN
+    if (CDN) {
+      for(var i = 0; i < CDN.length; i++){
+        var path = (htmlWebpackPlugin.options.publicPath || '') +  CDN[i]
+        var tag = ''
+        if(/\.css(\?.*)?/.test(path)){
+          tag = '<link href="'+ path +'" rel="stylesheet" />'
+        }else{
+          tag = '<script src="'+ path +'"></script>'
+        }
+    %>
+  <%= tag %>
+  <%
+      }
+    }
+    %>
 </head>
 
 <body>
+  <div id="scrollWrapper">
     <div id="app"></div>
-    <%
-        if(htmlWebpackPlugin.options.mode === 'development'){
-    %>
+  </div>
 
-    <script src="/vendor.dll.js"></script>
-
-    <%
-        }
-    %>
-    <!-- built files will be auto injected -->
 </body>
 
 </html>

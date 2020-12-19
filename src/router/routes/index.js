@@ -1,7 +1,12 @@
-import root from './root'
-import project from './project'
+import other from './other';
 
 export default [
-  ...root,
-  ...project,
-]
+  {
+    layout: {
+      header: true,
+    },
+    children: [
+      ...other,
+    ],
+  },
+];
