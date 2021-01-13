@@ -1,130 +1,155 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Modal, Spin } from 'antd';
 
-interface SMDialogAPI {
-  readonly open: () => void;
-  readonly close: () => void;
-  readonly submit: () => void;
+interface SMDialogInterface {
+  (): JSX.Element;
+  readonly open?: (params?) => void;
+  readonly close?: () => void;
+  readonly submit?: () => void;
+  readonly unlSMkSubmit?: () => void;
+  readonly setContentLoading?: (loading: boolean) => void;
 }
 
-export interface SMDialogProps {
+export type SMDialogProps = {
   title: string;
-  render(): React.ReactNode
+  render(api?: SMDialogInterface): React.ReactNode;
 
   width?: number;
   loading?: boolean;
-  onOpen?(): void; // 打开窗口
-  onSubmit?(): void; // 确定按钮的回调
-  onClose?(): void; // 关闭触发，可以被拦截
-  afterClose?(): void; // 关闭窗口后触发
+  onOpen?(params?, api?: SMDialogInterface): void; // 打开窗口
+  onSubmit?(api?: SMDialogInterface): void | false | Promise<any>; // 确定按钮的回调
+  onClose?(api?: SMDialogInterface): void; // 关闭触发，可以被拦截
+  afterClose?(api?: SMDialogInterface): void; // 关闭窗口后触发
 
-  props?: Record <string, unknown>; // 传递组件的原生props
-}
+  props?: Record<string, unknown>; // 传递组件的原生props
+};
 
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
-export function SMDialog (props: SMDialogProps) {
-  // ...
-}
+const propsKey = Symbol('propsKey');
 
-export default function useSMDialog ({
-  props = {},
-  title,
-  width,
-  loading = false,
+function useSMDialog(props: SMDialogProps) {
+  // useEffect(() => {
+  //   console.info('SMDialog.init');
+  // }, []);
 
-  render,
-  onOpen,
-  onSubmit,
-  onClose,
-  afterClose,
-}: SMDialogProps) {
-  const [ visible, visibleSet ] = useState(false);
-  const [ contentLoading, contentLoadingSet ] = useState(false);
-  const [ submitLoading, submitLoadingSet ] = useState(false);
-
-  useEffect(() => {
-    contentLoadingSet(loading);
-  }, [ loading ]);
-
-  useEffect(() => {
-    if (visible) {
-      onOpen && onOpen();
-    }
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [ visible ]);
-
-  const jsx = (
-    <Modal
-      maskClosable={false}
-      {...props}
-      {...createExternalProps()}
-    >
-      <Spin spinning={contentLoading}>
-        {render()}
-      </Spin>
-    </Modal>
-  );
-
-  const api = createAPI();
-
-  return [ jsx, api ] as [JSX.Element, SMDialogAPI];
-
-  function createAPI (): SMDialogAPI {
-    return {
-      open () {
-        visibleSet(true);
-      },
-      submit () {
-        hide(onSubmit && onSubmit());
-      },
-      close () {
-        hide(onClose && onClose());
-      },
-    };
-  }
-
-  function createExternalProps () {
-    const externalProps: { [k: string]: unknown } = {
+  const SMDialogFactory: SMDialogInterface = () => {
+    const {
+      props = {},
       title,
       width,
-      visible,
-      okButtonProps: {},
-      cancelButtonProps: {},
-    };
+      loading = false,
 
-    if (onSubmit) {
-      externalProps.onOk = () => api.submit();
-    }
+      render,
+      onOpen,
+      onSubmit,
+      onClose,
+      afterClose,
+    } = SMDialog[propsKey];
 
-    if (onClose || !props.onCancel) {
-      externalProps.onCancel = () => api.close();
-    }
+    const [visible, visibleSet] = useState(false);
+    const [contentLoading, contentLoadingSet] = useState(false);
+    const [submitLoading, submitLoadingSet] = useState(false);
+    const [openParams, openParamsSet] = useState();
 
-    if (afterClose) {
-      externalProps.afterClose = afterClose;
-    }
+    // console.info('SMDialog.render');
 
-    Object.assign(externalProps.okButtonProps, props.okButtonProps, {
-      loading: submitLoading,
-    });
+    useEffect(() => {
+      contentLoadingSet(loading);
+    }, [loading]);
 
-    Object.assign(externalProps.cancelButtonProps, props.cancelButtonProps, {
-      loading: submitLoading,
-    });
+    useEffect(() => {
+      if (visible) {
+        onOpen && onOpen(openParams, SMDialog);
+      }
+    }, [visible]);
 
-    return externalProps;
-  }
+    // useEffect(() => {
+    //   console.info('SMDialog.mouted');
+    // }, []);
 
-  function hide (result) {
-    if (result instanceof Promise) {
-      submitLoadingSet(true);
-      result.then(() => {
-        visibleSet(false);
-      }).finally(() => {
-        submitLoadingSet(false);
+    exportAPI();
+
+    return (
+      <Modal maskClosable={false} {...props} {...createExternalProps(SMDialog)}>
+        <Spin spinning={contentLoading}>{render(SMDialog)}</Spin>
+      </Modal>
+    );
+
+    function exportAPI() {
+      Object.assign(SMDialog, {
+        open(params) {
+          openParamsSet(params);
+          visibleSet(true);
+        },
+        submit() {
+          hide(onSubmit && onSubmit(SMDialog));
+        },
+        close() {
+          hide(onClose && onClose());
+        },
+        unlSMkSubmit() {
+          setTimeout(() => {
+            submitLoadingSet(false);
+          });
+        },
+        setContentLoading(loading) {
+          contentLoadingSet(loading);
+        },
       });
-    } else if (result !== false) {
-      visibleSet(false);
     }
-  }
+
+    function createExternalProps(innerAPI) {
+      const externalProps: { [k: string]: unknown } = {
+        title,
+        width,
+        visible,
+        okButtonProps: {},
+        cancelButtonProps: {},
+      };
+
+      if (onSubmit) {
+        externalProps.onOk = () => innerAPI.submit();
+      }
+
+      if (onClose || !props.onCancel) {
+        externalProps.onCancel = () => innerAPI.close();
+      }
+
+      if (afterClose) {
+        externalProps.afterClose = afterClose;
+      }
+
+      Object.assign(externalProps.okButtonProps, props.okButtonProps, {
+        loading: submitLoading,
+      });
+
+      Object.assign(externalProps.cancelButtonProps, props.cancelButtonProps, {
+        loading: submitLoading,
+      });
+
+      return externalProps;
+    }
+
+    function hide(result) {
+      if (result instanceof Promise) {
+        submitLoadingSet(true);
+        result
+          .then(() => {
+            visibleSet(false);
+          })
+          .finally(() => {
+            submitLoadingSet(false);
+          });
+      } else if (result !== false) {
+        visibleSet(false);
+      }
+    }
+  };
+
+  const [SMDialog] = useState(() => SMDialogFactory);
+
+  SMDialog[propsKey] = props;
+
+  return SMDialog;
 }
+
+export default useSMDialog;
