@@ -6,12 +6,13 @@ interface SMDialogInterface {
   readonly open?: (params?) => void;
   readonly close?: () => void;
   readonly submit?: () => void;
-  readonly unlSMkSubmit?: () => void;
+  readonly unlockSubmit?: () => void;
   readonly setContentLoading?: (loading: boolean) => void;
+  readonly setTitle?: (title: string | JSX.Element) => void;
 }
 
 export type SMDialogProps = {
-  title: string;
+  title: string | JSX.Element;
   render(api?: SMDialogInterface): React.ReactNode;
 
   width?: number;
@@ -26,7 +27,7 @@ export type SMDialogProps = {
 
 const propsKey = Symbol('propsKey');
 
-function useSMDialog(props: SMDialogProps) {
+function useSMDialog (props: SMDialogProps) {
   // useEffect(() => {
   //   console.info('SMDialog.init');
   // }, []);
@@ -45,22 +46,30 @@ function useSMDialog(props: SMDialogProps) {
       afterClose,
     } = SMDialog[propsKey];
 
-    const [visible, visibleSet] = useState(false);
-    const [contentLoading, contentLoadingSet] = useState(false);
-    const [submitLoading, submitLoadingSet] = useState(false);
-    const [openParams, openParamsSet] = useState();
+    const [ visible, visibleSet ] = useState(false);
+    const [ contentLoading, contentLoadingSet ] = useState(false);
+    const [ submitLoading, submitLoadingSet ] = useState(false);
+    const [ openParams, openParamsSet ] = useState();
+    const [ titleValue, titleValueSet ] = useState(title);
+    const [ titleValueLocked, titleValueLockedSet ] = useState(false);
 
     // console.info('SMDialog.render');
 
     useEffect(() => {
       contentLoadingSet(loading);
-    }, [loading]);
+    }, [ loading ]);
 
     useEffect(() => {
       if (visible) {
         onOpen && onOpen(openParams, SMDialog);
       }
-    }, [visible]);
+    }, [ visible ]);
+
+    useEffect(() => {
+      if (!titleValueLocked) {
+        titleValueSet(title);
+      }
+    }, [ title ]);
 
     // useEffect(() => {
     //   console.info('SMDialog.mouted');
@@ -74,32 +83,38 @@ function useSMDialog(props: SMDialogProps) {
       </Modal>
     );
 
-    function exportAPI() {
+    function exportAPI () {
       Object.assign(SMDialog, {
-        open(params) {
+        open (params) {
           openParamsSet(params);
           visibleSet(true);
         },
-        submit() {
+        submit () {
           hide(onSubmit && onSubmit(SMDialog));
         },
-        close() {
+        close () {
           hide(onClose && onClose());
         },
-        unlSMkSubmit() {
+        unlockSubmit () {
           setTimeout(() => {
             submitLoadingSet(false);
           });
         },
-        setContentLoading(loading) {
+        setContentLoading (loading) {
           contentLoadingSet(loading);
+        },
+        setTitle (title) {
+          if (!titleValueLocked) {
+            titleValueLockedSet(true);
+          }
+          titleValueSet(title);
         },
       });
     }
 
-    function createExternalProps(innerAPI) {
+    function createExternalProps (innerAPI) {
       const externalProps: { [k: string]: unknown } = {
-        title,
+        title: titleValue,
         width,
         visible,
         okButtonProps: {},
@@ -129,7 +144,7 @@ function useSMDialog(props: SMDialogProps) {
       return externalProps;
     }
 
-    function hide(result) {
+    function hide (result) {
       if (result instanceof Promise) {
         submitLoadingSet(true);
         result
@@ -145,7 +160,7 @@ function useSMDialog(props: SMDialogProps) {
     }
   };
 
-  const [SMDialog] = useState(() => SMDialogFactory);
+  const [ SMDialog ] = useState(() => SMDialogFactory);
 
   SMDialog[propsKey] = props;
 
@@ -153,3 +168,20 @@ function useSMDialog(props: SMDialogProps) {
 }
 
 export default useSMDialog;
+
+export {
+  SMConfirm,
+};
+
+
+function SMConfirm (msg: string, success: (() => void|Promise<any>)) {
+  Modal.confirm({
+    title: msg,
+    content: '',
+    onOk () {
+      return success();
+    },
+    okText: '确定',
+    cancelText: '取消',
+  });
+}

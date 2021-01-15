@@ -34,7 +34,7 @@ export type SMTreeProps = {
 
 const propsKey = Symbol('propsKey');
 
-function useSMTree(props: SMTreeProps) {
+function useSMTree (props: SMTreeProps) {
   const SMTreeFactory: SMTreeInterface = () => {
     const {
       props = {},
@@ -46,9 +46,9 @@ function useSMTree(props: SMTreeProps) {
       disabled,
     } = SMTree[propsKey];
 
-    const [params, paramsSet] = useState({});
-    const [loading, loadingSet] = useState(false);
-    const [treeData, treeDataSet] = useState([]);
+    const [ params, paramsSet ] = useState({});
+    const [ loading, loadingSet ] = useState(false);
+    const [ treeData, treeDataSet ] = useState([]);
     const adapterOption = {
       title,
       hoverButtons,
@@ -57,7 +57,7 @@ function useSMTree(props: SMTreeProps) {
       disabled,
     };
 
-    useEffect(fetchDataSource, [params]);
+    useEffect(fetchDataSource, [ params ]);
 
     exportAPI();
 
@@ -67,9 +67,9 @@ function useSMTree(props: SMTreeProps) {
       </Spin>
     );
 
-    function exportAPI() {
+    function exportAPI () {
       Object.assign(SMTree, {
-        reload() {
+        reload () {
           if (loading) {
             return;
           }
@@ -78,13 +78,13 @@ function useSMTree(props: SMTreeProps) {
       });
     }
 
-    function createExternalProps(innerAPI) {
+    function createExternalProps (innerAPI) {
       const externalProps: { [k: string]: unknown } = {};
       return externalProps;
     }
 
     // 拉取数据
-    function fetchDataSource() {
+    function fetchDataSource () {
       const result = dataSource(params);
       if (result instanceof Promise) {
         loadingSet(true);
@@ -104,7 +104,7 @@ function useSMTree(props: SMTreeProps) {
     }
   };
 
-  const [SMTree] = useState(() => SMTreeFactory);
+  const [ SMTree ] = useState(() => SMTreeFactory);
 
   SMTree[propsKey] = props;
 
@@ -113,7 +113,7 @@ function useSMTree(props: SMTreeProps) {
 
 export default useSMTree;
 
-function treeDataAdapter(
+function treeDataAdapter (
   originTreeData,
   { disabled, title, hoverButtons, icon, visible }
 ) {
@@ -123,7 +123,7 @@ function treeDataAdapter(
 
   return treeData;
 
-  function walkNodes(nodes, dataOutput) {
+  function walkNodes (nodes, dataOutput) {
     nodes.forEach((node) => {
       // 没有visible配置项，或者visible()返回值为true
       if (!visible || visible(node) === true) {
@@ -158,7 +158,7 @@ function treeDataAdapter(
     });
   }
 
-  function defaultTitleFactory(normalizeNode) {
+  function defaultTitleFactory (normalizeNode) {
     return (
       <span className={styles.treeNode}>
         <span className={styles.treeTitle}>{normalizeNode.label}</span>
@@ -167,35 +167,31 @@ function treeDataAdapter(
     );
   }
 
-  function hoverButtonsFactory(normalizeNode, hoverButtons) {
-    return () => {
-      return (
-        <span className={styles.hoverButtons}>
-          <Space>
-            {hoverButtons.buttons.map((button) => {
-              return (
-                <Tooltip
-                  key={button.icon}
-                  placement="top"
-                  title={button.tips || button.label || ''}
-                >
-                  <span
-                    onClick={(e) => {
-                      button.onClick && button.onClick(normalizeNode);
-                      e.stopPropagation();
-                    }}
-                  >
-                    <button.icon />
-                    <span className={styles.buttonLabel}>
-                      {button.label ? button.label : null}
-                    </span>
-                  </span>
-                </Tooltip>
-              );
-            })}
-          </Space>
-        </span>
-      );
-    };
+  function hoverButtonsFactory (normalizeNode, hoverButtons) {
+    return () => (
+      <span className={styles.hoverButtons}>
+        <Space>
+          {hoverButtons.buttons.map((button) => (
+            <Tooltip
+              key={button.icon}
+              placement="top"
+              title={button.tips || button.label || ''}
+            >
+              <span
+                onClick={(e) => {
+                  button.onClick && button.onClick(normalizeNode);
+                  e.stopPropagation();
+                }}
+              >
+                <button.icon />
+                <span className={styles.buttonLabel}>
+                  {button.label ? button.label : null}
+                </span>
+              </span>
+            </Tooltip>
+          ))}
+        </Space>
+      </span>
+    );
   }
 }
